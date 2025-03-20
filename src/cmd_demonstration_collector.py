@@ -91,8 +91,6 @@ def main():
         
     print("====== Starting the demonstration ========")
 
-    # FIXME: robot address etc. must be moved to configuration
-
     # the robot position controller
     robot_controller = PositionController(Config()["robot"]["usb_port"]) 
 
@@ -103,7 +101,7 @@ def main():
     #cameratracker = None
     # the XBox controller - we are using the control loop from this one
     # controller = "program"
-    controller = "program"
+    controller = "xbox"
     if controller == "xbox":
         gamepad_controller = GamepadController(
             robot_controller=robot_controller, camera_controller=camera_controller)
