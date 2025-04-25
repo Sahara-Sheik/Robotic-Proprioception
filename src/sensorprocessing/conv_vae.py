@@ -6,7 +6,9 @@ Helper functions for calling the Julian-8897-Conv-VAE-PyTorch ConvVAE implementa
 
 import sys
 sys.path.append("..")
-from settings import Config
+
+from exp_run_config import Config
+Config.PROJECTNAME = "BerryPicker"
 
 import argparse
 import json

@@ -13,7 +13,8 @@ from robotcontrol.program_controller import ProgramController
 from robot.al5d_position_controller import PositionController, RobotPosition
 from camera.camera_controller import CameraController
 
-from settings import Config
+from exp_run_config import Config
+Config.PROJECTNAME = "BerryPicker"
 
 import logging
 logger = logging.getLogger(__name__)

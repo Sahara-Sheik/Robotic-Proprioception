@@ -5,7 +5,9 @@ Helper functions for sensor processing. Loading image files or video captures in
 """
 import sys
 sys.path.append("..")
-from settings import Config
+
+from exp_run_config import Config
+Config.PROJECTNAME = "BerryPicker"
 
 from PIL import Image
 import torch

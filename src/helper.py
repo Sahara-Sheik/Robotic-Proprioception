@@ -1,6 +1,7 @@
 from pathlib import Path
 import sys
-from settings import Config
+from exp_run_config import Config
+Config.PROJECTNAME = "BerryPicker"
 
 # shared code for the various commands
 

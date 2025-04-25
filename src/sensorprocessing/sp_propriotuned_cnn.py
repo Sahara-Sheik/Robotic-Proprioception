@@ -5,7 +5,9 @@ Sensor processing using pretrained CNN
 """
 import sys
 sys.path.append("..")
-from settings import Config
+
+from exp_run_config import Config
+Config.PROJECTNAME = "BerryPicker"
 
 from .sensor_processing import AbstractSensorProcessing
 from .sp_helper import get_transform_to_robot, load_picturefile_to_tensor

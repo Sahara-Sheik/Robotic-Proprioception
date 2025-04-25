@@ -2,8 +2,9 @@ from helper import ui_choose_task, ui_choose_demo, analyze_demo
 from pathlib import Path
 import json
 import time
-from robot.al5d_position_controller import PositionController, RobotPosition    
-from settings import Config
+from robot.al5d_position_controller import PositionController, RobotPosition   
+from exp_run_config import Config
+Config.PROJECTNAME = "BerryPicker"
 
 def replay_full_speed(robot_controller, demo_dir, maxsteps, delay = 0.1):
     """Runs"""

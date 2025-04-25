@@ -5,6 +5,9 @@ import torch.optim as optim
 
 torch.manual_seed(1)
 
+from exp_run_config import Config
+Config.PROJECTNAME = "BerryPicker"
+
 
 from helper import ui_choose_task
 from gamepad.gamepad_controller import GamepadController
@@ -15,9 +18,6 @@ from camera.camera_controller import CameraController
 
 from sensorprocessing import sp_conv_vae
 from behavior_cloning.bc_LSTM import LSTMXYPredictor, LSTMResidualController
-
-
-from settings import Config
 
 def main():
     print("======= Run the robot with the behavior from settings =========")
