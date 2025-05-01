@@ -58,3 +58,52 @@ class DemonstrationRecorder:
     def stop(self):
         """FIXME: This might be used in the future to save final stuff etc."""
         pass
+
+    def convert_to_video(self):
+        """Converts the jpg files to a video"""
+        for index in self.camera_controller.images:        
+            videopath = pathlib.Path(self.save_dir, f"video_{index}.mp4")
+
+            # Collect and sort all files matching the pattern *_dev2.jpg
+            image_files = sorted(self.save_dir.glob(f"*_{index}.jpg"))
+
+            # Read the first image to get dimensions
+            first_frame = cv2.imread(str(image_files[0]))
+            height, width, _ = first_frame.shape
+            fps = 10.0
+
+            out = cv2.VideoWriter(videopath, cv2.VideoWriter_fourcc(*'mp4v'), fps, (width, height))
+            
+            # Write all frames
+            for image_file in image_files:
+                frame = cv2.imread(str(image_file))
+                out.write(frame)
+            out.release()
+
+    def access_frame(self, idx, frameno):
+        """Accesses a particular frame in a particular video. 
+        FIXME: this needs to be specified for the exact way in which this is used for training... it is probably a lot more expensive than just collecting the jpgs"""
+        # Path to the video file
+        video_path = pathlib.Path(self.save_dir, f"video_index.mp4")
+
+        # Frame number you want to extract (e.g., 100th frame)
+        target_frame = 100
+
+        # Open the video
+        cap = cv2.VideoCapture(video_path)
+
+        # Set the position to the target frame
+        cap.set(cv2.CAP_PROP_POS_FRAMES, frameno)
+
+        # Read the frame
+        ret, frame = cap.read()
+
+        #if ret:
+            # Save the frame as an image
+            # cv2.imwrite("frame_100.jpg", frame)
+            #print("Frame saved as frame_100.jpg")
+        #else:
+        #    print("Failed to retrieve the frame.")
+
+        cap.release()
+        return frame
