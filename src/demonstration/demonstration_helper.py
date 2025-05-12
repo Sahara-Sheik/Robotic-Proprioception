@@ -6,7 +6,6 @@ Create training data from demonstrations with support for multiple camera views.
 import sys
 sys.path.append("..")
 
-import torch
 import helper
 import pathlib
 import json
@@ -14,8 +13,9 @@ from pprint import pformat
 import numpy as np
 from sensorprocessing.sp_helper import load_picturefile_to_tensor
 
+from demonstration import Demonstration
 
-class BCDemonstration:
+class BCDemonstration(Demonstration):
     """This class encapsulates loading a demonstration with the intention to convert it into training data.
 
     This code is a training helper which encapsulates one behavior cloning demonstration, which is a sequence of form $\{(s_0, a_0), ...(s_n, a_n)\}$.
@@ -25,16 +25,19 @@ class BCDemonstration:
     The transformation of $s \rightarrow z$ is done through an object of type AbstractSensorProcessing.
 
     The class now supports multiple camera views per timestep.
+
+    FIXME: the parameters of this should be the exp/runs 
+
     """
 
-    def __init__(self, source_dir, sensorprocessor, actiontype="rc-position-target", cameras=None):
-        self.source_dir = source_dir
+    def __init__(self, exp_demo, demo, sensorprocessor, actiontype="rc-position-target", cameras=None):
+        super().init(exp_demo, demo)
         self.sensorprocessor = sensorprocessor
         assert actiontype in ["rc-position-target", "rc-angle-target", "rc-pulse-target"]
         self.actiontype = actiontype
 
         # analyze the directory
-        self.available_cameras, self.maxsteps = helper.analyze_demo(source_dir)
+        self.available_cameras, self.maxsteps = helper.analyze_demo(self.demo_dir)
 
         # Set cameras to use
         if cameras is None:
@@ -48,7 +51,7 @@ class BCDemonstration:
             self.cameras = cameras
 
         # read in _demonstration.json, load the trim values
-        demo_config_path = pathlib.Path(self.source_dir, "_demonstration.json")
+        demo_config_path = pathlib.Path(self.demo_dir, "_demonstration.json")
         if demo_config_path.exists():
             with open(demo_config_path) as file:
                 data = json.load(file)
@@ -96,8 +99,6 @@ class BCDemonstration:
 
         return np.array(z, dtype=np.float32), np.array(a, dtype=np.float32)
 
-    def __str__(self):
-        return pformat(self.__dict__)
 
     def get_z(self, i, camera=None):
         """
@@ -110,49 +111,15 @@ class BCDemonstration:
         if camera is None:
             camera = self.cameras[0]
 
-        filepath = pathlib.Path(self.source_dir, f"{i:05d}_{camera}.jpg")
+        filepath = pathlib.Path(self.demo_dir, f"{i:05d}_{camera}.jpg")
         val = self.sensorprocessor.process_file(filepath)
         return val
 
-    def get_image(self, i, camera=None, transform=None):
-        """
-        Gets the image as a torch batch
 
-        Args:
-            i: The timestep index
-            camera: Which camera to use. If None, uses the first camera.
-            transform: Optional transform to apply to the image
-        """
-        if camera is None:
-            camera = self.cameras[0]
-
-        filepath = pathlib.Path(self.source_dir, f"{i:05d}_{camera}.jpg")
-        sensor_readings, image = load_picturefile_to_tensor(filepath, transform)
-        return sensor_readings, image
-
-    def get_all_images(self, i, transform=None):
-        """
-        Gets images from all cameras for a specific timestep
-
-        Args:
-            i: The timestep index
-            transform: Optional transform to apply to the images
-
-        Returns:
-            Dictionary mapping camera names to (sensor_readings, image) tuples
-        """
-        images = {}
-        for camera in self.cameras:
-            filepath = pathlib.Path(self.source_dir, f"{i:05d}_{camera}.jpg")
-            if filepath.exists():
-                sensor_readings, image = load_picturefile_to_tensor(filepath, transform)
-                images[camera] = (sensor_readings, image)
-
-        return images
 
     def get_a(self, i):
         """Get the action data for a specific timestep"""
-        filepath = pathlib.Path(self.source_dir, f"{i:05d}.json")
+        filepath = pathlib.Path(self.demo_dir, f"{i:05d}.json")
         with open(filepath) as file:
             data = json.load(file)
         if self.actiontype == "rc-position-target":

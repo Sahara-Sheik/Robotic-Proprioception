@@ -82,22 +82,3 @@ def ui_edit_demo_metadata(description):
         if val == "x":
             break
 
-def analyze_demo(demo_dir):
-    """
-    Analize a demo directory, find the cameres etc. 
-    FIXME: maybe easier to just write this in the _demonstration.json.
-    """
-    maxsteps = -1
-    cameraset = {}
-    for a in demo_dir.iterdir():
-        if a.name.endswith(".json") and a.name.startswith("0"):
-            count = int(a.name.split(".")[0])
-            maxsteps = max(maxsteps, count)
-        if a.name.endswith(".jpg"):
-            cameraname = a.name[6:-4]
-            cameraset[cameraname] = cameraname
-    cameras = sorted(cameraset.keys())
-    print(f"Cameras found: {cameras}")
-    print(f"There are {maxsteps} steps in this demonstration")
-    print(f"This demonstration was recorded by the following cameras: {cameras}")
-    return cameras, maxsteps
