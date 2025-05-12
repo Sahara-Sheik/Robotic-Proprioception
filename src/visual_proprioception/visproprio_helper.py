@@ -10,7 +10,7 @@ Config.PROJECTNAME = "BerryPicker"
 import pathlib
 import torch
 import numpy as np
-from demonstration.demonstration_helper import BCDemonstration
+from demonstration.encoded_demonstrations import BCDemonstration
 
 from robot.al5d_position_controller import RobotPosition
 from sensorprocessing import sp_conv_vae, sp_propriotuned_cnn, sp_aruco, sp_vit, sp_vit_multiview, sp_vit_concat_images

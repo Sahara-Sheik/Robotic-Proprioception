@@ -1,16 +1,45 @@
 """
-demonstration_helper.py
+demonstration.py
 
-Create training data from demonstrations with support for multiple camera views.
+A class that wraps the data files in the demonstration, and allows convenient accesss to them. 
 """
 import sys
 sys.path.append("..")
 
-import torch
 import pprint
 import pathlib
 from sensorprocessing.sp_helper import load_picturefile_to_tensor
 
+
+def list_demos(exp):
+    """List all the demonstrations described in an exp/run. This can be passed as the second argument of the Demonstration constructor."""
+    demos = [item.name for item in exp.data_dir().iterdir() if item.is_dir()]
+    return demos
+
+def select_demo(exp, force_choice=None):
+    """Interactively select one one the demonstrations, or force the choice to a number."""
+    demodirs = [item for item in exp.data_dir().iterdir() if item.is_dir()]
+    demos_dict = {}
+    for i, t in enumerate(demodirs):
+        demos_dict[i] = t
+    print("A pop up dialog will appear now. Enter the number of demonstration.")
+    for key in demos_dict:
+        print(f"\t{key}: {demos_dict[key].name}")
+    # FIXME: for easier debugging
+    if not force_choice:
+        inpval = input("Choose the demonstration: ")
+    else:
+        inpval = str(force_choice)
+    # inpval = "0"
+    # print(inpval)
+    if inpval:
+        demo_id = int(inpval)
+        if demo_id in demos_dict:
+            demo_dir = demos_dict[demo_id]
+            print(f"You chose demonstration: {demo_dir.name}")
+        else:
+            print(f"No such demo: {demo_id}")
+    return demo_dir.name
 
 class Demonstration:
     """This class encapsulates all the convenience functions for a demonstration, including loading images etc. """
@@ -21,6 +50,8 @@ class Demonstration:
         self.demo = demo
         self.demo_dir = pathlib.Path(exp.data_dir(), demo)
         self.maxsteps = -1
+        # Analyzes the demonstration to get the list of cameras. 
+        # FIXME: this does the analysis based on the picture names. Instead, everything should be in the _demonstration.json.
         cameraset = {}
         for a in self.demo_dir.iterdir():
             if a.name.endswith(".json") and a.name.startswith("0"):
@@ -34,13 +65,15 @@ class Demonstration:
     def __str__(self):
         return pprint.pformat(self.__dict__)
 
-
     def get_image_path(self, i, camera=None):
-        """Returns the Path to the image, if the demo is stored as independent image files."""
+        """Returns the path to the image, if the demo is stored as independent image files."""
         if camera is None:
             camera = self.cameras[0]
         filepath = pathlib.Path(self.demo_dir, f"{i:05d}_{camera}.jpg")
         return filepath
+    
+    def get_video_path(self, camera=None):
+        """Returns the path to the camera"""
 
 
     def get_image(self, i, camera=None, transform=None):

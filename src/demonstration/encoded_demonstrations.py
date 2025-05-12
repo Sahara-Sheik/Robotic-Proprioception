@@ -9,7 +9,6 @@ sys.path.append("..")
 import helper
 import pathlib
 import json
-from pprint import pformat
 import numpy as np
 from sensorprocessing.sp_helper import load_picturefile_to_tensor
 
