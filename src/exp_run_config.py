@@ -1,13 +1,17 @@
 """
 exp_run_config.py
 
-Implements the Experiment / Run / Subrun framework. 
+Implements the Configuration / Experiment / Run / Subrun framework. 
+
+This is a configuration system for software projects that allows the running of projects that need to run on multiple, differently configurated machines, on different platforms. 
+
+It is specifically focusing on cases where multiple different kinds of experiments have to be run and analyzed, under various configurations and assumptions. 
 
 FIXME: clean up the below text
 
 These can be considered as constants for a particular run, but they might have different values on different computers or setups.
 
-They should be accessed through Config().values["value"]
+They should be accessed through Config()["value"]
 
 A configuration system that allows porting between different machines and the use of multiple configuration files. 
 
@@ -239,7 +243,7 @@ class Config:
 
         self.__log(f"Configuration for exp/run: {experiment_name}/{run_name} successfully loaded")
 
-        # creating the data dir - FIXME this should be subdir based
+        # creating the data dir
         if subrun_name is None:
             data_dir = pathlib.Path(self.values["experiment_data"], experiment_name, run_name)
         else:

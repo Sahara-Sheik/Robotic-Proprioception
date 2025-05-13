@@ -8,7 +8,7 @@ sys.path.append("..")
 
 import pprint
 import pathlib
-from sensorprocessing.sp_helper import load_picturefile_to_tensor
+from sensorprocessing.sp_helper import load_picturefile_to_tensor, load_capture_to_tensor
 
 
 def list_demos(exp):
@@ -73,8 +73,11 @@ class Demonstration:
         return filepath
     
     def get_video_path(self, camera=None):
-        """Returns the path to the camera"""
-
+        """Returns the path to the video file for the specified camera, if it is stored as video file"""
+        if not camera:
+            camera = self.cameras[0]
+        video_path = pathlib.Path(self.demo_dir, f"video_{camera}.mp4")
+        return video_path
 
     def get_image(self, i, camera=None, transform=None):
         """
