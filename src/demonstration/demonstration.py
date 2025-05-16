@@ -58,11 +58,15 @@ class Demonstration:
         action_path = pathlib.Path(self.demo_dir, "_action.yaml")
         with open(action_path, "w") as file:
             yaml.dump(self.actions, file, indent=4)
+        annotation_path = pathlib.Path(self.demo_dir, "_annotation.yaml")
+        with open(annotation_path, "w") as file:
+            yaml.dump(self.annotations, file, indent=4)
 
 
     def parse_image_based_demonstration(self):
         """Utility function to parse a demonstration that is stored as a sequence of images. We assume that the images have the format of {i:05d}_{camera}.jpg, where i is the timestep and camera is the camera name. This function creates the metadata file. If the images are stored as a video, we assume that this is a new demonstration, and the metadata already exists. 
         """
+        print("***Demonstration***: parsing image based demonstration")
         self.metadata = {}
         # Set default values for metadata
         self.metadata["stored_as_video"] = False
@@ -83,14 +87,28 @@ class Demonstration:
         self.metadata["maxsteps"] = maxsteps + 1
         # load the content of json files into the metadata
         self.actions = []
+        self.annotations = []
         for i in range(self.metadata["maxsteps"]):
             json_path = pathlib.Path(self.demo_dir, f"{i:05d}.json")
             with open(json_path) as file:
                 data = json.load(file)
+            data.pop("annotation")
+            data.pop("reward")
+            data["time"] = i
             self.actions.append(data)
+            self.annotations.append({"reward": 0.0, "comment":"", "labels": [], "time": i}) # append empty annotations
         self.save_metadata()
+        print("***Demonstration***: parsing image based demonstration done")
 
-    def get_action(self, i, type="rc_position_target"):
+    def get_annotation(self, i, type="reward"):
+        """Returns the annotation, by default the reward"""
+        return self.annotations[i][type]
+
+    def set_annotation(self, i, value, type="reward"):
+        """Sets the annotation, by default the reward"""
+        self.annotations[i][type] = value
+
+    def get_action(self, i, type="rc-position-target"):
         """Returns the action at timestep i. The action is a dictionary, and the type is the key to the dictionary. The default is "rc_position_target", which is the position of the robot in the world frame. Other types are "rc_velocity_target" and "rc_orientation_target".
         """
         actions = self.actions[i][type]
@@ -109,6 +127,9 @@ class Demonstration:
             action_path = pathlib.Path(self.demo_dir, "_action.yaml")
             with open(action_path) as file:
                 self.actions = yaml.safe_load(file)
+            annotation_path = pathlib.Path(self.demo_dir, "_annotation.yaml")
+            with open(annotation_path) as file:
+                self.annotations = yaml.safe_load(file)
         else:
             self.parse_image_based_demonstration()    
         self.videocap = {} # placeholder for open videos
@@ -183,11 +204,13 @@ class Demonstration:
 
     def move_to_video(self, delete_img_files = False):
         """Moves to the video the content all all cameras"""
+        print("***Demonstration***: moving to video started")
         for cam in self.metadata["cameras"]:
             self._move_to_video_per_camera(cam, delete_img_files)
         self.metadata["stored_as_images"] = not delete_img_files
         self.metadata["stored_as_video"] = True
         self.save_metadata()
+        print("*** Demonstration***: moving to video done")
 
     def get_image_path(self, i, camera=None):
         """Returns the path to the image, if the demo is stored as independent image files."""

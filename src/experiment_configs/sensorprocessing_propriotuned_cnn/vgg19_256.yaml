@@ -9,5 +9,8 @@ output_size: 6
 
 freeze_feature_extractor: True
 
-proprioception_training_task: 'proprio_sp_training'
-proprioception_testing_task: 'proprio_sp_validation'
+# the training data in the demonstration / subrun form 
+training_data:
+  - ["freeform", "2024_12_26__16_40_20"]
+  - ["freeform", "2024_12_26__16_44_06"]
+
