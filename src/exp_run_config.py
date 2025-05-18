@@ -31,6 +31,7 @@ Config()["group"]["value"]
 import yaml
 import pathlib
 import shutil
+import textwrap
 from datetime import datetime
 
 
@@ -51,8 +52,10 @@ class Experiment:
         return key in self.values
 
     def __repr__(self):
-        """FIXME: print the experiment out in a readable way"""
-        return f"Experiment: {self.values}"
+        text = yaml.dump(self.values)
+        text = textwrap.indent(text, prefix="    ")
+        text = "Experiment:" + "\n" + text
+        return text
     
     def data_dir(self):
         return pathlib.Path(self.values[Config.DATA_DIR])

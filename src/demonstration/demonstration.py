@@ -7,6 +7,7 @@ import json
 import sys
 
 import cv2
+import numpy as np
 import yaml
 sys.path.append("..")
 
@@ -173,7 +174,16 @@ class Demonstration:
         else:
             return self.get_image_from_video(i, camera=camera, cache=True)
 
-    def get_image_from_video(self, i, camera=None, cache=False):
+    def write_image(self, i, filepath, camera=None, transform=None):
+        """Writes the specified image to a jpg file in filepath. This 
+        function can be used to save the transformed images."""
+        sensor, _ = self.get_image(i, camera=camera, transform=transform)
+        image = sensor[0].permute(1, 2, 0).cpu().numpy()  # to H x W x C
+        image = (image * 255).astype(np.uint8)
+        image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        cv2.imwrite(filepath, image_bgr)
+
+    def get_image_from_video(self, i, camera=None, transform=None, cache=False):
         """Extracts an image from the video. 
         If cache is False, the function closes the open file
         """
@@ -192,7 +202,7 @@ class Demonstration:
             # CV2 reads by default in BGR... 
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             # cv2.imwrite(output_image, frame)    
-            image_to_process, image_to_show = load_capture_to_tensor(frame, transform=None)
+            image_to_process, image_to_show = load_capture_to_tensor(frame, transform=transform)
         else:
             print(f"Could not read frame {i}")
             image_to_process = None

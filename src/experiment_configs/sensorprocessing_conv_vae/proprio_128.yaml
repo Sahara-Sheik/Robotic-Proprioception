@@ -2,7 +2,7 @@
 # visual proprioception experiments
 
 latent_size: 128
-epochs: 300
+epochs: 5 # was 300
 
 # the training data in the demonstration / subrun form 
 training_data:
@@ -14,7 +14,6 @@ validation_data:
   - ["freeform", "2024_12_26__16_40_20"]
   - ["freeform", "2024_12_26__16_44_06"]
 
-
 # training_task: 'proprio_sp_training' 
 # on tredy and szenes
 #validation_task: 'proprio_sp_validation'
@@ -24,6 +23,8 @@ validation_data:
 # are created in an unpredictable location by the library
 
 # on lotzi-yoga
+model_subdir: '0517_171500'
+model_checkpoint: 'checkpoint-epoch275.pth'
 # model_subdir: '0209_133250'
 # model_checkpoint: 'checkpoint-epoch10.pth'
 
@@ -32,5 +33,5 @@ validation_data:
 #model_checkpoint: 'checkpoint-epoch200.pth'
 
 # on szenes
-model_subdir: '0216_111207'
-model_checkpoint: 'checkpoint-epoch300.pth'
+# model_subdir: '0517_171500'
+# model_checkpoint: 'checkpoint-epoch275.pth'
