@@ -194,9 +194,9 @@ class Config:
         mixture between the system-dependent configuration and the system independent configuration."""
         current_directory = pathlib.Path(__file__).resolve().parent
         #
-        # Load the system independent group configuration
+        # Load the system independent defaults configuration
         #
-        experiment_group_indep = pathlib.Path(current_directory, "experiment_configs", experiment_name, "_" + experiment_name + ".yaml")
+        experiment_group_indep = pathlib.Path(current_directory, "experiment_configs", experiment_name, "_defaults_" + experiment_name + ".yaml")
         if not experiment_group_indep.exists():
             raise Exception(f"Missing experiment default config {experiment_group_indep}")
         with experiment_group_indep.open("rt") as handle:
