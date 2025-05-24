@@ -2,8 +2,9 @@
 # visual proprioception experiments
 
 latent_size: 256
+image_size: [64, 64]
 # epochs: 300
-epochs: 3
+epochs: 5
 
 # the training data in the demonstration / subrun form 
 training_data:

@@ -186,7 +186,7 @@ class Demonstration:
     def write_image(self, i, filepath, camera=None, transform=None):
         """Writes the specified image to a jpg file in filepath. This 
         function can be used to save the transformed images."""
-        sensor, _ = self.get_image(i, camera=camera, transform=transform)
+        sensor, _ = self.get_image(i, camera=camera, transform=transform, device="cpu")
         image = sensor[0].permute(1, 2, 0).cpu().numpy()  # to H x W x C
         image = (image * 255).astype(np.uint8)
         image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)

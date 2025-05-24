@@ -27,7 +27,7 @@ class AbstractSensorProcessing:
     def process_file(self, sensor_image_file):
         """Processes the sensor image from a file. This probably does not need to be overwritten. 
         """
-        sensor_readings, _ = load_picturefile_to_tensor(sensor_image_file, self.transform)
+        sensor_readings, _ = load_picturefile_to_tensor(sensor_image_file, self.transform, device=self.device)
         output = self.process(sensor_readings)
         return output
 

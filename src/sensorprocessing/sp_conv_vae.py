@@ -41,9 +41,9 @@ class ConvVaeSensorProcessing (AbstractSensorProcessing):
     def __init__(self, exp, device):
         """Restore a pre-trained model based on the configuration json file and the model file"""
         super().__init__(exp, device)
-        model_subdir = Path(exp["data_dir"], exp["model_dir"], "models", exp["model_name"], exp["model_subdir"])
-        self.conv_vae_jsonfile = Path(model_subdir, "config.json")
-        self.resume_model_pthfile = Path(model_subdir, exp["model_checkpoint"])
+        #model_subdir = Path(exp["data_dir"], exp["model_dir"], "models", exp["model_name"], exp["model_subdir"])
+        self.conv_vae_jsonfile = Path(exp.data_dir(), "config.json")
+        self.resume_model_pthfile = Path(exp.data_dir(), "model.pth")
         # self.conv_vae_jsonfile = conv_vae_jsonfile
         # self.resume_model_pthfile = resume_model_pthfile
         self.vae_config = get_conv_vae_config(
@@ -62,7 +62,7 @@ class ConvVaeSensorProcessing (AbstractSensorProcessing):
         # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.model = self.model.to(self.device)
         self.model.eval()
-        self.transform = get_transform_to_sp()
+        self.transform = get_transform_to_sp(exp)
 
 
     def process(self, sensor_readings):
