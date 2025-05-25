@@ -33,6 +33,7 @@ import pathlib
 import shutil
 import textwrap
 from datetime import datetime
+from pathlib import Path
 
 
 class Experiment:
@@ -189,7 +190,7 @@ class Config:
         subdirs = [p.name for p in data_dir.iterdir() if p.is_dir()]
         return subdirs
 
-    def get_experiment(self, experiment_name, run_name, subrun_name=None):
+    def get_experiment(self, experiment_name, run_name, subrun_name=None, creation_style="exist-ok"):
         """Returns an experiment configuration, which is the 
         mixture between the system-dependent configuration and the system independent configuration."""
         current_directory = pathlib.Path(__file__).resolve().parent
@@ -253,9 +254,37 @@ class Config:
             data_dir = pathlib.Path(self.values["experiment_data"], experiment_name, run_name, subrun_name)
         exp_config[Config.DATA_DIR] = str(data_dir)
         exp_config[Config.SUBRUN_NAME] = subrun_name
-        data_dir.mkdir(exist_ok=True, parents=True)
 
-        exp = Experiment(exp_config)
-        exp.set_time_started()
-        exp.save()
+        if creation_style == "exist-ok":
+            # it is ok if the directory exists, but then we don't measure time
+            # or save the values
+            exp = Experiment(exp_config)
+            if not data_dir.exists():
+                data_dir.mkdir(exist_ok=True, parents=True)
+                exp.set_time_started()
+                exp.save()
+        elif creation_style == "version":
+            # if the directory exists, move it to a backup
+            if data_dir.exists():                
+                now = datetime.now()
+                formatted = now.strftime("%Y-%m-%d-%H-%M-%S")
+                print(formatted)  # Example output: 2025-05-25-17-11            
+                backup_dir = data_dir.parent / f"{data_dir.name}_{formatted}"
+                self.__log(f"Moving existing experiment directory to {backup_dir}")
+                data_dir.rename(backup_dir)
+                data_dir.mkdir(exist_ok=True, parents=True)
+                exp = Experiment(exp_config)
+                exp.set_time_started()
+                exp.save()
+        elif creation_style == "discard-old":
+            # if the directory exists, remove it
+            if data_dir.exists():
+                if input(f"Experiment directory {data_dir} already exists. Do you want to remove it? (y/n): ").strip().lower() != 'y':
+                    raise Exception(f"Experiment directory {data_dir} already exists, and you chose not to remove it.")
+                self.__log(f"Removing existing experiment directory {data_dir}")
+                shutil.rmtree(data_dir)
+            data_dir.mkdir(exist_ok=True, parents=True)
+            exp = Experiment(exp_config)
+            exp.set_time_started()
+            exp.save()    
         return exp
