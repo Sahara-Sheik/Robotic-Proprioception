@@ -1,10 +1,9 @@
 latent_size: 128
+image_size: [256, 256]
 
 MARKER_COUNT: 10
 
-# on tredy and szenes, overwritten on LotziYoga
-validation_task: 'proprioception-aruco'
-#validation_demo: '2025_02_25__10_47_22'
-# validation_demo: '2025_02_25__11_02_02'
-validation_demo: 'test'
-
+# the validation data in the demonstration / subrun form 
+validation_data:
+  - ["freeform", "2024_12_26__16_40_20", "dev2"]
+  - ["freeform", "2024_12_26__16_44_06", "dev2"]
