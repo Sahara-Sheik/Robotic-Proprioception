@@ -10,12 +10,14 @@ Config.PROJECTNAME = "BerryPicker"
 import pathlib
 import torch
 import numpy as np
-from demonstration.encoded_demonstrations import BCDemonstration
+# from demonstration.encoded_demonstrations import BCDemonstration
 
 from robot.al5d_position_controller import RobotPosition
 from sensorprocessing import sp_conv_vae, sp_propriotuned_cnn, sp_aruco, sp_vit, sp_vit_multiview, sp_vit_concat_images
 
-def load_demonstrations_as_proprioception_training(sp, task, proprioception_input_file, proprioception_target_file):
+
+
+def load_demonstrations_as_proprioception_training_old(sp, task, proprioception_input_file, proprioception_target_file):
     """
     FIXME: it is not clear if this is the one where this data is put together - if that is the case, this is actually not the right function to call
 
@@ -66,21 +68,21 @@ def load_demonstrations_as_proprioception_training(sp, task, proprioception_inpu
         torch.save(retval["inputs"], proprioception_input_file)
         torch.save(retval["targets"], proprioception_target_file)
 
-    # Separate the training and validation data.
-    # We will be shuffling the demonstrations
-    length = retval["inputs"].size(0)
-    rows = torch.randperm(length)
-    shuffled_inputs = retval["inputs"][rows]
-    shuffled_targets = retval["targets"][rows]
+        # Separate the training and validation data.
+        # We will be shuffling the demonstrations
+        length = retval["inputs"].size(0)
+        rows = torch.randperm(length)
+        shuffled_inputs = retval["inputs"][rows]
+        shuffled_targets = retval["targets"][rows]
 
-    training_size = int( length * 0.67 )
-    retval["inputs_training"] = shuffled_inputs[1:training_size]
-    retval["targets_training"] = shuffled_targets[1:training_size]
+        training_size = int( length * 0.67 )
+        retval["inputs_training"] = shuffled_inputs[1:training_size]
+        retval["targets_training"] = shuffled_targets[1:training_size]
 
-    retval["inputs_validation"] = shuffled_inputs[training_size:]
-    retval["targets_validation"] = shuffled_targets[training_size:]
+        retval["inputs_validation"] = shuffled_inputs[training_size:]
+        retval["targets_validation"] = shuffled_targets[training_size:]
 
-    return retval
+        return retval
 
 def load_multiview_demonstrations_as_proprioception_training(task, proprioception_input_file, proprioception_target_file, num_views=2):
     """

@@ -52,6 +52,9 @@ class Experiment:
     def __contains__(self, key):
         return key in self.values
 
+    def get(self, key, default=None):
+        return self.values.get(key, default)
+
     def __repr__(self):
         text = yaml.dump(self.values)
         text = textwrap.indent(text, prefix="    ")
