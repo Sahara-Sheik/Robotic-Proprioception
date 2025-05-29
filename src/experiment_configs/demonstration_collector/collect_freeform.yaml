@@ -1,3 +1,10 @@
 # the most default demonstration collector - it collects demos into the freeform demonstration
 # note that these can be later moved to other ones
 
+demonstration_name: "freeform"
+
+primary_controller: "keyboard"
+
+robot_controller: "robot_position_controller"
+camera_controller: "camera_cam0_controller"
+keyboard_controller: "keyboard_controller"

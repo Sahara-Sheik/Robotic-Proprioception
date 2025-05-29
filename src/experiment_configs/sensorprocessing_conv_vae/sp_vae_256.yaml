@@ -2,7 +2,9 @@
 # visual proprioception experiments
 
 latent_size: 256
-image_size: [64, 64]
+
+# Fall back to default, other ones are not feasible anyhow
+# image_size: [64, 64]
 
 # If this is commented out, fall back the low default training
 epochs: 100

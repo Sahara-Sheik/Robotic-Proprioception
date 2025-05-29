@@ -1,0 +1,3 @@
+# configuration for the robot controller
+
+device: "/dev/ttyUSB0"

@@ -4,7 +4,9 @@ json_template_name: 'conv-vae-config-default.json'
 model_name: 'VAE_Robot'
 model_dir: 'models'
 
-latent_size: 128
+# the library enforces 64 x 64
+image_size: [64, 64]
+# latent_size: 128
 epochs: 5
 save_period: 5
 

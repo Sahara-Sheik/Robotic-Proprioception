@@ -14,15 +14,17 @@ class CameraController:
     # cameras = [0, 2]
     cameras = [4]    
     """
-    def __init__(self, devices = [2, 3, 4], img_size = (128, 128)):
+#    def __init__(self, devices = [2, 3, 4], img_size = (128, 128)):
+    def __init__(self, exp):
         """
         cameras: a list of numbers which correspond to the capture devices that will be captured
         dimension: the dimension to which the images are scaled down
         """
-        self.img_size = img_size
+        self.exp = exp
+        self.img_size = exp["saved_image_size"]
         # create the capture devices
         self.capture_devs = {}
-        for i in devices:
+        for i in exp["active_camera_list"]:
             cap = cv2.VideoCapture(i) 
             if cap is None or not cap.isOpened():
                 print(f"Warning: unable to open video source: {i}")

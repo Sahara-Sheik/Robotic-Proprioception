@@ -96,10 +96,14 @@ class RobotPosition:
         return retval
 
 class PositionController:
-    """A controller that controls the robot in terms of the physical position of the actuator. The general idea is that this captures some of the low level calculations necessary to control the robot in an intelligent way. The idea is that this had been engineered, while what comes on top of this will be learned."""
-
-    def __init__(self, device = '/dev/ttyUSB0'):
-        self.pulse_controller = PulseController(device = device)
+    """A controller that controls the robot in terms of the physical position of the actuator. The general idea is that this captures some of the low level calculations necessary to control the robot in an intelligent way. The idea is that this had been engineered, while what comes on top of this will be learned.
+    
+    device = '/dev/ttyUSB0'
+    """
+    def __init__(self, exp):
+        self.exp = exp
+        self.device = exp["device"]
+        self.pulse_controller = PulseController(device = self.device)
         self.pulse_controller.start_robot()
         self.angle_controller = AngleController(self.pulse_controller)
         self.pos = RobotPosition()
