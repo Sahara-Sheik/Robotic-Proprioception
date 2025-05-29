@@ -23,6 +23,7 @@ def load_demonstrations_as_proprioception_training(sp, exp, spexp, datasetname, 
         retval = {}        
         retval["inputs"] = torch.load(proprioception_input_file, weights_only=True)
         retval["targets"] = torch.load(proprioception_target_file, weights_only=True)
+        print(f"***load_demonstrations_as_proprioception_training*** \n\tSuccessfully loaded from cached files {proprioception_input_file} etc")
         return retval
 
     inputlist = []
@@ -49,9 +50,8 @@ def load_demonstrations_as_proprioception_training(sp, exp, spexp, datasetname, 
     retval["targets"] = torch.stack(targetlist)
     torch.save(retval["inputs"], proprioception_input_file)
     torch.save(retval["targets"], proprioception_target_file)
+    print(f"***load_demonstrations_as_proprioception_training*** \n\tSuccessfully recalculated the proprioception training and saved it to {proprioception_input_file} etc")    
     return retval            
-
-
 
 def load_multiview_demonstrations_as_proprioception_training(task, proprioception_input_file, proprioception_target_file, num_views=2):
     """

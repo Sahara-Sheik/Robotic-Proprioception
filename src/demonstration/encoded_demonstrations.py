@@ -14,7 +14,7 @@ from sensorprocessing.sp_helper import load_picturefile_to_tensor
 
 from demonstration import Demonstration
 
-class EncodedDemonstrations():
+class EncodedDemonstrations_obsolete():
     """This class encapsulates loading a demonstration with the intention to convert it into training data.
 
     FIXME: not converted yet to the model. 

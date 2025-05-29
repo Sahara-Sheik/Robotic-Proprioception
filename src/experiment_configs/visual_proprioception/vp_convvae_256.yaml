@@ -19,14 +19,3 @@ sp_experiment: 'sensorprocessing_conv_vae'
 sp_run: 'proprio_256'
 
 # the training data: use the default
-
-# the training data in the demonstration / subrun / camera form 
-#training_data:
-#  - ["freeform", "2024_12_26__16_40_20", "dev2"]
-#  - ["freeform", "2024_12_26__16_44_06", "dev2"]
-
-
-# the validation data in the demonstration / subrun form 
-#validation_data:
-#  - ["freeform", "2024_12_26__16_40_20", "dev2"]
-#  - ["freeform", "2024_12_26__16_44_06", "dev2"]

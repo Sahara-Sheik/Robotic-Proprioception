@@ -1,0 +1,11 @@
+# This run creates a conv_vae encoding of width 128, planned for the 
+# visual proprioception experiments
+
+latent_size: 128
+image_size: [64, 64]
+
+# epochs: take it from the defaults (low value)
+# epochs: 5 # was 300
+
+# the training and validation data: take it from the defaults 
+
