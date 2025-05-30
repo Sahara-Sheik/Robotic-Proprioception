@@ -51,16 +51,16 @@ class AbstractController:
 
     def update(self):
         """Updates the state of the various components"""
-        logger.info(f"Update started")
+        logger.info(f"***AbstractController***: Update started")
         if self.camera_controller is not None:
             self.camera_controller.update()
         if self.demonstration_recorder is not None:
             self.demonstration_recorder.save()
-        logger.info(f"Update done")
+        logger.info(f"***AbstractController***: Update done")
         
     def control_robot(self):
         """Control the robot by sending a command to move towards the target"""
-        logger.info(f"Control robot: move to position {self.pos_target}")
         if self.robot_controller is not None:
+            logger.info(f"***AbstractController***: Control robot: move to position {self.pos_target}")
             self.robot_controller.move(self.pos_target)
-        logger.info("Control robot done.")
+            logger.info("***AbstractController***: Control robot done.")

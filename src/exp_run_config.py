@@ -106,7 +106,8 @@ class Experiment:
 
     def end_timer(self, timer_name="default"):
         now = datetime.now()
-        self.values["timer-" + timer_name + "-end"] = now.strftime(Config.TIME_FORMAT)
+        self.values["timer-" + timer_name + "-end"] = now.strftime(Config.TIME_FORMAT)        
+        self.save()
 
     def done(self):
         """Sets the time done variable, and saves"""

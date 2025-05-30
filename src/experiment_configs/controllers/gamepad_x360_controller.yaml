@@ -1,0 +1,4 @@
+# The controller for the x360
+button_exit: "square"
+button_home: "home"
+delta_gripper: 100

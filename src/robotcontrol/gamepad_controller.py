@@ -19,8 +19,9 @@ class GamepadController(AbstractController):
     """
     A controller to control an AL5D robot with an X360 type controller (tested with the Voyee). This controller is based on the approxeng.input library and it is only working in Linux.
     """
-    def __init__(self, robot_controller: PositionController = None, camera_controller = None, demonstration_recorder = None):
+    def __init__(self, exp, robot_controller: PositionController = None, camera_controller = None, demonstration_recorder = None):
         super().__init__(robot_controller, camera_controller, demonstration_recorder)
+        self.exp = exp
     
     def control(self):
         """The main control loop"""
@@ -40,6 +41,7 @@ class GamepadController(AbstractController):
                         break;
                     self.control_robot() 
                     self.update()
+                    # go to sleep for the reminder of the allocated time slot. 
                     end_time = time.time() 
                     execution_time = end_time - start_time 
                     self.last_interval = execution_time
@@ -78,9 +80,9 @@ class GamepadController(AbstractController):
         # the triggers immediately open and close the gripper
         # the pad opens/closes it gradually
         if "l1" in presses.names:
-            delta_gripper = 100
+            delta_gripper = self.exp["delta_gripper"]
         if "r1" in presses.names:
-            delta_gripper = -100
+            delta_gripper = -self.exp["delta_gripper"]
         if joystick["dleft"] is not None: # if held, returns the seconds
             delta_gripper += self.v_gripper * self.last_interval
             logging.warning(f"{joystick.dleft}")
@@ -89,11 +91,11 @@ class GamepadController(AbstractController):
 
 
         # square aka x - exit control
-        if "square" in presses.names:
+        if self.exp["button_exit"] in presses.names:
             self.exit_control = True
             return
         # home  
-        if "home" in presses.names:
+        if self.exp["button_home"] in presses.names:
             self.pos_target = copy(self.pos_home)
             return
         # applying the changes 
