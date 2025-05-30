@@ -45,8 +45,9 @@ class KeyboardController(AbstractController):
     right-alt 234
     """
 
-    def __init__(self, robot_controller: PositionController = None, camera_controller = None, demonstration_recorder = None):
+    def __init__(self, exp, robot_controller: PositionController = None, camera_controller = None, demonstration_recorder = None):
         super().__init__(robot_controller, camera_controller, demonstration_recorder)
+        self.exp = exp
     
 
     def control(self):
@@ -74,56 +75,56 @@ class KeyboardController(AbstractController):
         keycode = key & 0xFF
         # distance: s and a 
         delta_distance = 0
-        if keycode == ord('s'): # forward
+        if keycode == ord(self.exp["forward_ord"]): # forward
             delta_distance = self.v_distance * self.last_interval
-        if keycode == ord('a'): # backward
+        if keycode == ord(self.exp["backward_ord"]): # backward
             delta_distance = - self.v_distance * self.last_interval
         # height: w and z
         delta_height = 0
-        if keycode == ord("w"): # up
+        if keycode == ord(self.exp["up_ord"]): # up
             delta_height = self.v_height * self.last_interval
-        if keycode == ord("z"): # down
+        if keycode == ord(self.exp["down_ord"]): # down
             delta_height = - self.v_height * self.last_interval
         # rotation: left-right FIXME: maybe this should go on pgup 85/86
         delta_heading = 0
-        if keycode == 81: # left -> rotate-left
+        if keycode == self.exp["heading_left_kc"]: # left -> rotate-left
             delta_heading = self.v_heading * self.last_interval
-        if keycode == 83: # right -> rotate-right
+        if keycode == self.exp["heading_right_kc"]: # right -> rotate-right
             delta_heading = - self.v_heading * self.last_interval
 
         # wrist angle: pg-up pg-down FIXME: maybe this should go on up down
         delta_wrist_angle = 0
-        if keycode == 85: # pgup - wrist angle up
+        if keycode == self.exp["wrist_up_kc"]: # pgup - wrist angle up
             delta_wrist_angle = self.v_wrist_angle * self.last_interval 
-        if keycode == 86: # pgdn - wrist angle down
+        if keycode == self.exp["wrist_down_kc"]: # pgdn - wrist angle down
             delta_wrist_angle = - self.v_wrist_angle * self.last_interval 
 
         # wrist rotation: left-right
         delta_wrist_rotation = 0
-        if keycode == 81: # left --> wrist-rotate-left
+        if keycode == self.exp["wrist_left_kc"]: # left --> wrist-rotate-left
             delta_wrist_rotation = self.v_wrist_rotation * self.last_interval 
-        if keycode == 83: # right --> write-rotate-right
+        if keycode == self.exp["wrist_right_kc"]: # right --> write-rotate-right
             delta_wrist_rotation = - self.v_wrist_rotation * self.last_interval 
 
         # gripper open-close: right alt / shift 226 / 234
         delta_gripper = 0
         # the right alt/shift immediately closes and opens the gripper
-        if keycode == 226:
+        if keycode == self.exp["close_gripper_kc"]:
             delta_gripper = 100
-        if keycode == 234:
+        if keycode == self.exp["open_gripper_kc"]:
             delta_gripper = -100
         # the left alt/shift opens/closes it gradually 225/233
-        if keycode == 225:
+        if keycode == self.exp["closer_gripper_kc"]:
             delta_gripper += self.v_gripper * self.last_interval
-        if keycode == 233:
+        if keycode == self.exp["wider_gripper_kc"]:
             delta_gripper += - self.v_gripper * self.last_interval
 
         # square aka x - exit control
-        if keycode == ord("x"):
+        if keycode == ord(self.exp["exit_control_ord"]):
             self.exit_control = True
             return
         # home h  
-        if keycode == ord("h"):
+        if keycode == ord(self.exp["home_ord"]):
             self.pos_target = copy(self.pos_home)
             return
         # applying the changes 

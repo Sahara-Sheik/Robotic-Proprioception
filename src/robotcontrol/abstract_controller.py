@@ -43,24 +43,25 @@ class AbstractController:
 
     def stop(self):
         """Stops the controller and all the other subcomponents"""
-        self.robot_controller.stop_robot()
-        if self.demonstration_recorder is not None:
+        if self.robot_controller:
+            self.robot_controller.stop_robot()
+        if self.demonstration_recorder:
             self.demonstration_recorder.stop()
-        if self.camera_controller is not None:
+        if self.camera_controller:
             self.camera_controller.stop()
 
     def update(self):
         """Updates the state of the various components"""
         logger.info(f"***AbstractController***: Update started")
-        if self.camera_controller is not None:
+        if self.camera_controller:
             self.camera_controller.update()
-        if self.demonstration_recorder is not None:
+        if self.demonstration_recorder:
             self.demonstration_recorder.save()
         logger.info(f"***AbstractController***: Update done")
         
     def control_robot(self):
         """Control the robot by sending a command to move towards the target"""
-        if self.robot_controller is not None:
+        if self.robot_controller:
             logger.info(f"***AbstractController***: Control robot: move to position {self.pos_target}")
             self.robot_controller.move(self.pos_target)
             logger.info("***AbstractController***: Control robot done.")
