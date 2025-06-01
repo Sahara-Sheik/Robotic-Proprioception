@@ -1,3 +1,4 @@
+class: "VGG19ProprioTunedSensorProcessing"
 name : 'vgg19-256'
 
 # image_size: [64, 64]

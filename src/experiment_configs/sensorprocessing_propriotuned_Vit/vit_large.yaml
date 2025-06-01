@@ -1,6 +1,7 @@
 
 ### New #################
 
+class: "Vit"
 
 name: "sp_vit_large_transformer"
 model_type: "VisionTransformer6D"

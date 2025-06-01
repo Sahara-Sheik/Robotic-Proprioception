@@ -1,3 +1,4 @@
+class: "ResNetProprioTunedSensorProcessing"
 # resnet-50 00 
 name : 'resnet-50-256'
 

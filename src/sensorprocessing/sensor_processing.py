@@ -31,3 +31,4 @@ class AbstractSensorProcessing:
         output = self.process(sensor_readings)
         return output
 
+

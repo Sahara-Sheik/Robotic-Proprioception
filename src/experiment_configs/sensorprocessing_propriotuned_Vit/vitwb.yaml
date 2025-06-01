@@ -1,3 +1,4 @@
+class: "Vit"
 
 name: "sp_vit_transformer_wb"
 model_type: "VisionTransformer6D"

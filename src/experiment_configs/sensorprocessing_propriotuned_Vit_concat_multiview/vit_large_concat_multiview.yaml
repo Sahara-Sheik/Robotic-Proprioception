@@ -1,6 +1,7 @@
 
 ### New #################
 
+class: "Vit_multiview"
 
 name: "sp_vit_large_transformer_concat_multiview"
 model_type: "VisionTransformer6D"

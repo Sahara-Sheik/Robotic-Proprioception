@@ -14,7 +14,7 @@ from demonstration.demonstration import Demonstration
 # from demonstration.encoded_demonstrations import BCDemonstration
 
 from robot.al5d_position_controller import RobotPosition
-from sensorprocessing import sp_conv_vae, sp_propriotuned_cnn, sp_aruco, sp_vit, sp_vit_multiview, sp_vit_concat_images
+
 import sensorprocessing.sp_helper as sp_helper
 
 def load_demonstrations_as_proprioception_training(sp, exp, spexp, datasetname, proprioception_input_file, proprioception_target_file, device=None):
@@ -177,22 +177,3 @@ def load_multiview_demonstrations_as_proprioception_training(task, proprioceptio
     return retval
 
 
-def get_visual_proprioception_sp(exp, device):
-    """Gets the sensor processing component specified by the
-    visual_proprioception experiment."""
-    spexp = Config().get_experiment(exp['sp_experiment'], exp['sp_run'])
-    if exp["sensor_processing"] == "ConvVaeSensorProcessing":
-        return sp_conv_vae.ConvVaeSensorProcessing(spexp, device)
-    if exp['sensor_processing']=="VGG19ProprioTunedSensorProcessing":
-        return sp_propriotuned_cnn.VGG19ProprioTunedSensorProcessing(spexp, device)
-    if exp['sensor_processing']=="ResNetProprioTunedSensorProcessing":
-        return sp_propriotuned_cnn.ResNetProprioTunedSensorProcessing(spexp, device)
-    if exp['sensor_processing']=="Aruco":
-        return sp_aruco.ArucoSensorProcessing(spexp, device)
-    if exp['sensor_processing']=="Vit":
-        return sp_vit.VitSensorProcessing(spexp, device)
-    if exp['sensor_processing'] == "Vit_multiview":
-        return sp_vit_multiview.MultiViewVitSensorProcessing(spexp, device)
-    if exp['sensor_processing'] == "Vit_concat_images":
-        return sp_vit_concat_images.ConcatImageVitSensorProcessing(spexp, device)
-    raise Exception('Unknown sensor processing {exp["sensor_processing"]}')

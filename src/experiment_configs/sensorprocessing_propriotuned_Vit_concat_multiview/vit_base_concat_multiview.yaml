@@ -1,3 +1,4 @@
+class: "Vit_multiview"
 # ViT model specifications
 name: "sp_vit_transformer_concat_multiview"
 model_type: "VisionTransformer6D"

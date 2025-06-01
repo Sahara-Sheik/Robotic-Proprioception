@@ -1,3 +1,5 @@
+class: "Aruco"
+
 latent_size: 128
 image_size: [256, 256]
 
