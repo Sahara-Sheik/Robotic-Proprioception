@@ -15,7 +15,6 @@ from torchvision import transforms
 
 def get_transform_to_sp(exp):
     """Creates a transform object that transforms a figure into the right size tensor that is suitable for the sensor processing model."""
-    # image_size = Config()["robot"]["image_size"][0]
     image_size = exp["image_size"][0]
     transform = transforms.Compose([
         transforms.Resize(image_size),
