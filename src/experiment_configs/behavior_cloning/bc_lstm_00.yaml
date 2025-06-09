@@ -5,10 +5,10 @@ sp_experiment: 'sensorprocessing_conv_vae'
 sp_run: 'sp_vae_256'
 
 # controller type
-controller: "LSTMXYPredictor"
+controller: "bc_LSTM"
 controller_file: "controller.pth"
-controller_num_layers: 2
-controller_hidden_size: 32  
+num_layers: 2
+hidden_size: 32  
 
 # the size
 control_size: 6

@@ -1,9 +1,8 @@
 """
 bc_LSTM.py
 
-LSTM-based models for behavior cloning. They are mapping visual encoding to action. 
-
-FIXME: add (1) models that also take into account tasks (2) models that predict sequences. 
+LSTM-based models for behavior cloning. 
+They are mapping sequences of latent encodings to the next action. 
 """
 
 import sys
@@ -15,17 +14,19 @@ import torch
 import torch.nn as nn
 
 
-class LSTMXYPredictor(nn.Module):
+class bc_LSTM(nn.Module):
     """
-    This is the architecture created by chatgpt. 
-    Uses an input of the size of the latent encoding and the output of the size of the action space (normally 6).
-    The output is 
+    Simple LSTM-based bahavior cloning module. Mostly specified through the exp/spexp
     """
-    def __init__(self, latent_size, hidden_size, output_size, num_layers):
-        super(LSTMXYPredictor, self).__init__()
+    def __init__(self, exp, spexp):
+        super().__init__()
+        self.input_size = spexp["latent_size"]
+        self.output_size = exp["control_size"]  # deg. of freedom
+        self.num_layers = exp["num_layers"]
+        self.hidden_size = exp["hidden_size"]
         self.state = None
-        self.lstm = nn.LSTM(latent_size, hidden_size, num_layers, batch_first=True)
-        self.fc = nn.Linear(hidden_size, output_size)
+        self.lstm = nn.LSTM(self.input_size, self.hidden_size,self.num_layers, batch_first=True)
+        self.fc = nn.Linear(self.hidden_size, self.output_size)
 
     def forward(self, x):
         # x: [batch_size, sequence_length, latent_size]
@@ -40,7 +41,7 @@ class LSTMXYPredictor(nn.Module):
         out = self.fc(out[:, -1, :])  # Take last time step output and pass through the fully connected layer
         return out  # Predicted next vector
 
-class LSTMResidualController(nn.Module):
+class bc_LSTM_Residual(nn.Module):
     """
     LSTM w/ 3 layers and skip connections.
     This is an attempt to recreate the LSTM model from the Rouhollah 2020 paper. 

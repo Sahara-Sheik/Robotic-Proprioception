@@ -6,19 +6,25 @@ Creating different models for behavior cloning based on the specification in the
 
 import torch.nn as nn
 import torch.optim as optim
-from bc_LSTM import LSTMXYPredictor, LSTMResidualController
+from bc_MLP import bc_MLP
+from bc_LSTM import bc_LSTM, bc_LSTM_Residual
 
 def create_bc_model(exp, spexp, device):
     latent_size = spexp["latent_size"]
     output_size = exp["control_size"]  # degrees of freedom in the robot
 
-    if exp["controller"] == "LSTMXYPredictor":
+    if exp["controller"] == "bc_MLP":
+        model = bc_MLP(exp, spexp)
+        model = model.to(device)
+        criterion = nn.MSELoss()  # Mean Squared Error for regression
+        criterion = criterion.to(device)
+        optimizer = optim.Adam(model.parameters(), lr=0.001)
+        return model, criterion, optimizer
 
-        num_layers = exp["controller_num_layers"]
-        hidden_size = exp["controller_hidden_size"] 
+    if exp["controller"] == "bc_LSTM":
 
         # Instantiate model, loss function, and optimizer
-        model = LSTMXYPredictor(latent_size=latent_size, hidden_size=hidden_size, output_size = output_size, num_layers=num_layers)
+        model = bc_LSTM(exp, spexp)
         model = model.to(device)
         criterion = nn.MSELoss()  # Mean Squared Error for regression
         criterion = criterion.to(device)
@@ -28,7 +34,7 @@ def create_bc_model(exp, spexp, device):
     if exp["controller"] == "LSTMResidualController":
         hidden_size = exp["controller_hidden_size"] 
         # Instantiate model, loss function, and optimizer
-        model = LSTMResidualController(latent_size=latent_size, hidden_size=hidden_size, output_size = output_size)
+        model = bc_LSTM_Residual(latent_size=latent_size, hidden_size=hidden_size, output_size = output_size)
         model = model.to(device)
         criterion = nn.MSELoss()  # Mean Squared Error for regression
         criterion = criterion.to(device)

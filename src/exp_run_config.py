@@ -205,7 +205,14 @@ class Config:
 
     def get_experiment(self, experiment_name, run_name, subrun_name=None, creation_style="exist-ok"):
         """Returns an experiment configuration, which is the 
-        mixture between the system-dependent configuration and the system independent configuration."""
+        mixture between the system-dependent configuration and the system independent configuration.
+        
+        creation_style can be 
+            "exist-ok" - reuse the cached values
+            "discard-old" - discard the old values, start from scratch
+            "version" - create a new version
+        
+        """
         current_directory = pathlib.Path(__file__).resolve().parent
         #
         # Load the system independent defaults configuration
@@ -292,8 +299,8 @@ class Config:
         elif creation_style == "discard-old":
             # if the directory exists, remove it
             if data_dir.exists():
-                if input(f"Experiment directory {data_dir} already exists. Do you want to remove it? (y/n): ").strip().lower() != 'y':
-                    raise Exception(f"Experiment directory {data_dir} already exists, and you chose not to remove it.")
+                #if input(f"Experiment directory {data_dir} already exists. Do you want to remove it? (y/n): ").strip().lower() != 'y':
+                #    raise Exception(f"Experiment directory {data_dir} already exists, and you chose not to remove it.")
                 self.__log(f"Removing existing experiment directory {data_dir}")
                 shutil.rmtree(data_dir)
             data_dir.mkdir(exist_ok=True, parents=True)

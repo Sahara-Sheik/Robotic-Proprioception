@@ -5,13 +5,17 @@ sp_experiment: 'sensorprocessing_conv_vae'
 sp_run: 'sp_vae_256'
 
 # controller type
-controller: "MLP_Simple"
+controller: "bc_MLP"
 controller_file: "controller.pth"
 
 # the size
 control_size: 6
-# the lenght of the sequence created for the LSTM-type training
-sequence_lenght: 10
+# set the sequence lenght to zero as we are training on x, a pairs
+sequence_lenght: 0
+
+hidden_layers: 2
+hidden_layer_1: 50
+hidden_layer_2: 20
 
 # information about the training
 epochs: 10
