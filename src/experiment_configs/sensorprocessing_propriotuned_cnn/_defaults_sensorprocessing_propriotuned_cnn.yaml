@@ -1,6 +1,9 @@
 latent_size: 128
 model_name: 'VGG-19'
 
+robot_exp: "robot_al5d"
+robot_run: "position_controller_00"
+
 proprioception_mlp_model_file: 'proprioception_mlp.pth'
 proprioception_input_file: 'train_inputs.pt'
 proprioception_target_file: 'train_targets.pt'

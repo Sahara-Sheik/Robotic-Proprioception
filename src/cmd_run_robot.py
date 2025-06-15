@@ -25,7 +25,10 @@ def main():
     print("... Initializing the robot")
 
     # the robot position controller
-    robot_controller = PositionController(Config()["robot"]["usb_port"]) 
+    experiment = "robot_al5d"
+    run = "position_controller_00"
+    exp = Config().get_experiment(experiment, run)
+    robot_controller = PositionController(exp) 
 
     print("... Initializing the camera")
 
@@ -72,9 +75,9 @@ def main():
         print(inp)
         a_pred = model.forward_keep_state(inp)[0]
         print(f"a_pred: {a_pred}")
-        a_pos = RobotPosition.from_normalized_vector(a_pred)
+        a_pos = RobotPosition.from_normalized_vector(exp, a_pred)
         # Safety 1: limit
-        ok, a_pos = RobotPosition.limit(a_pos)
+        ok, a_pos = RobotPosition.limit(exp, a_pos)
         if not ok:
             print(f"The proposed position was out of limit, fixed. \nNew value a_pos: {a_pos}")
         # Safety 2: empirical distance

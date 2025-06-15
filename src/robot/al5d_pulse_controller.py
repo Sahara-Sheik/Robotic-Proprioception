@@ -1,4 +1,11 @@
-from . import al5d_constants
+"""
+al5d_pulse_controller.py
+
+A low-level position controller for the al5d robot
+"""
+
+
+# from . import al5d_constants
 import numpy as np
 import serial
 import sys
@@ -15,27 +22,29 @@ class PulseController:
     https://wiki.lynxmotion.com/info/wiki/lynxmotion/view/servo-erector-set-system/ses-electronics/ses-modules/ssc-32/ssc-32-manual/#qpwidth
     """
 
-    def __init__(self, sp = None, device=None):
-        self.cnt_servos = 6
+    def __init__(self, exp):
+        self.exp = exp
+        self.cnt_servos = exp["no_servos"]
         # the position taken by every motor when we are starting up
         # the robot
-        self.pulse_position_default = 1500
+        self.pulse_position_default = exp["pulse_position_default"]
         # the position taken by every motor when we are starting up
         # the robot
         # self.pulse_position_zero = 0
         # tracking the positions of the robot in terms of the pulse positions at the servos
         self.positions_pulse = np.ones(
             self.cnt_servos) * self.pulse_position_default
-        if sp == None:
-            if device == None:
-                raise Exception("No device specified")                
-            try:
-                self.sp = serial.Serial(device, 9600)
-            except serial.serialutil.SerialException as spex:
-                print(spex)
-                sys.exit(1)            
-        else:
-            self.sp = sp
+        # if sp == None:
+        #     if device == None:
+        #         raise Exception("No device specified")                
+        #     try:
+        #         self.sp = serial.Serial(device, 9600)
+        #     except serial.serialutil.SerialException as spex:
+        #         print(spex)
+        #         sys.exit(1)            
+        # else:
+        #     self.sp = sp
+        self.sp = serial.Serial(exp["device"], 9600)
         self.command_finished = True
 
     def as_dict(self):
@@ -53,23 +62,21 @@ class PulseController:
     def stop_robot(self):
         """ Brings the robot relatively quickly to the default position. 
         Then, sets all motors to idle/unpowered (pulse = 0) """
-        self.start_robot(1000)
+        self.start_robot(self.exp["robot_start_speed"])
         time.sleep(5)
         self.command_finished = False
         for servo in range(0, self.cnt_servos):
             command = f"#{servo} P{0}\r"
             self.sp.write(command.encode())
 
-    def control_servo_pulse(self, servo, pulse, speed=al5d_constants.CST_SPEED_DEFAULT):
+    def control_servo_pulse(self, servo, pulse):
         """Sends a command to the particular servo to move to the particular
         pulse value, moving with the specified speed.
         """
-        # TODO: some way to see if I passed a bad value - maybe a bad
-        # value should not be passed???
-        # TODO: option to wait here to execute???
         # FIXME: I removed this, because it does not play well with the constraints
         #pulse, _ = RobotControllerHelper.constrain(
         #    pulse, CST_PULSE_MIN, CST_PULSE_MAX)
+        speed=self.exp["CST_SPEED_DEFAULT"]
         command = f"#{servo} P{pulse} S{speed}\r"
         logger.info(command)
         self.sp.write(command.encode())
@@ -100,8 +107,9 @@ class PulseController:
         return val
 
 
-    def control_pulses(self, target_pulses, time=al5d_constants.TIME_DEFAULT):
+    def control_pulses(self, target_pulses):
         """Sends a command to set all the motors simultaneously"""
+        time=self.exp["TIME_DEFAULT"]
         command = ""
         for i in range(6):
             command += f"#{i} P {target_pulses[i]} "
@@ -112,15 +120,16 @@ class PulseController:
         self.positions_pulse = target_pulses
 
 
-    def control_servo_relative_pulse(self, servo, relative_pulse, speed=al5d_constants.CST_SPEED_DEFAULT):
+    def control_servo_relative_pulse(self, servo, relative_pulse):
         """Sends a command a particular servo to change its position with 
         the specified pulse value (positive or negative), and a specific speed
         """
         # TODO: some way to check whether a bad value was passed, probably error should be raised.
         # TODO: option to wait here to execute
+        speed=self.exp["CST_SPEED_DEFAULT"]
         pulse = self.positions_pulse[servo] + relative_pulse
         pulse, constrained = RobotHelper.constrain(
-            pulse, al5d_constants.CST_PULSE_MIN, al5d_constants.CST_PULSE_MAX)
+            pulse, self.exp["CST_PULSE_MIN"], self.exp["CST_PULSE_MAX"])
         if constrained:
             logger.warning("out of range at control_servo_relative_pulse")
         self.control_servo_pulse(servo, pulse, speed)

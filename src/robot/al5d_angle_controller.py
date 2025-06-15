@@ -1,5 +1,5 @@
 import numpy as np
-from . import al5d_constants
+# from . import al5d_constants
 from .al5d_helper import RobotHelper
 from .al5d_pulse_controller import PulseController
 
@@ -7,7 +7,8 @@ class AngleController:
     """Implements a robot controller for the AL5D robot which performs control in the terms of angles (for the joints) and distance for the gripper.
     """
 
-    def __init__(self, pulse_controller: PulseController):
+    def __init__(self, pulse_controller: PulseController, exp):
+        self.exp = exp
         self.pulse_controller = pulse_controller
         self.positions = np.ones(self.pulse_controller.cnt_servos-1) * \
             RobotHelper.pulse_to_angle(
@@ -26,10 +27,11 @@ class AngleController:
             retval[i] = v
         return retval
 
-    def control_servo_angle(self, servo, angle, speed=al5d_constants.CST_SPEED_DEFAULT):
+    def control_servo_angle(self, servo, angle):
         """Controls the servo through angle, by converting the angle to pulse. It sets the position assuming success. Works only for the 5 angle servos."""
+        speed = self.exp["CST_SPEED_DEFAULT"]
         pulse, _ = RobotHelper.servo_angle_to_pulse(servo, angle)
-        if servo < 0 or servo >= al5d_constants.SERVO_GRIP:
+        if servo < 0 or servo >= self.exp["no_servos"]:
             raise Exception(f"Invalid servo for control_servo_angle {servo}")
         self.pulse_controller.control_servo_pulse(servo, pulse, speed)
         self.positions[servo] = angle
@@ -40,17 +42,18 @@ class AngleController:
         pulse = 1000 + 15 * (100 - distance)
         return pulse
 
-    def control_gripper(self, distance, speed=al5d_constants.CST_SPEED_DEFAULT):
+    def control_gripper(self, distance):
         """Sets the gripper to a certain opening distance [0..100]"""
+        speed = self.exp["CST_SPEED_DEFAULT"]
         pulse = self.calculate_gripper(distance)
-        self.pulse_controller.control_servo_pulse(al5d_constants.SERVO_GRIP, pulse, speed)
+        self.pulse_controller.control_servo_pulse("SERVO_GRIP", pulse, speed)
         self.gripper_distance = distance
 
     def control_angles(self, positions, gripper_distance):
         """Controls all the angles and the gripper in one shot"""
         target_pulses = np.zeros(self.pulse_controller.cnt_servos)
         for i in range(self.pulse_controller.cnt_servos - 1):
-            target_pulses[i], _ = RobotHelper.servo_angle_to_pulse(i, positions[i])
+            target_pulses[i], _ = RobotHelper.servo_angle_to_pulse(i, positions[i], self.exp)
         target_pulses[self.pulse_controller.cnt_servos-1] = self.calculate_gripper(gripper_distance)
         self.pulse_controller.control_pulses(target_pulses)
         self.positions = positions

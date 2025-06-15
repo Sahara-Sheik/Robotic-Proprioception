@@ -1,4 +1,13 @@
-from . import al5d_constants
+"""
+al5d_helper.py
+
+Helper functions for the al5d robot
+"""
+
+from exp_run_config import Config, Experiment
+Config.PROJECTNAME = "BerryPicker"
+
+
 import logging
 logging.basicConfig(level=logging.WARNING)
 
@@ -26,33 +35,33 @@ class RobotHelper:
         return (value)
 
     @staticmethod
-    def angle_to_pulse(angle, constrain=True):
+    def angle_to_pulse(exp: Experiment, angle, constrain=True):
         """Returns the pulse that correspond to a certain angle. 
         If constrain is set, the angle will be constrained in the legal range."""
         if constrain:
             angle, constrained = RobotHelper.constrain(
-                angle, al5d_constants.CST_ANGLE_MIN, al5d_constants.CST_ANGLE_MAX)
+                angle, exp["CST_ANGLE_MIN"], exp["CST_ANGLE_MAX"])
         pulse = RobotHelper.map_ranges(
-            angle, al5d_constants.CST_ANGLE_MIN, al5d_constants.CST_ANGLE_MAX, al5d_constants.CST_PULSE_MIN, al5d_constants.CST_PULSE_MAX)
+            angle, exp["CST_ANGLE_MIN"], exp["CST_ANGLE_MAX"], exp["CST_PULSE_MIN"], exp["CST_PULSE_MAX"])
         return int(pulse), constrained
 
     @staticmethod
-    def servo_angle_to_pulse(servo, angle, constrain=True):
+    def servo_angle_to_pulse(exp: Experiment, servo, angle, constrain=True):
         """Performs the angle to pulse transformation on a servo-specific basis, while taking into consideration the specific limits and adding pulse corrections"""
         if constrain:
-            min_value = al5d_constants.ANGLE_LIMITS[servo][0]
-            max_value = al5d_constants.ANGLE_LIMITS[servo][2]
+            min_value = exp["ANGLE_LIMITS"][servo][0]
+            max_value = exp["ANGLE_LIMITS"][servo][2]
             angle, constrained = RobotHelper.constrain(
                 angle, min_value, max_value)
         pulse = RobotHelper.map_ranges(
-            angle, al5d_constants.CST_ANGLE_MIN, al5d_constants.CST_ANGLE_MAX, al5d_constants.CST_PULSE_MIN, al5d_constants.CST_PULSE_MAX)
-        corrected_pulse = int(pulse) + al5d_constants.PULSE_CORRECTION[servo]
+            angle, exp["CST_ANGLE_MIN"], exp["CST_ANGLE_MAX"], exp["CST_PULSE_MIN"], exp["CST_PULSE_MAX"])
+        corrected_pulse = int(pulse) + exp["PULSE_CORRECTION"][servo]
         return corrected_pulse, constrained
 
 
     @staticmethod
-    def pulse_to_angle(pulse):
+    def pulse_to_angle(exp: Experiment, pulse):
         """Returns the angle corresponding to a certain pulse"""
         angle = RobotHelper.map_ranges(
-            pulse, al5d_constants.CST_PULSE_MIN, al5d_constants.CST_PULSE_MAX, al5d_constants.CST_ANGLE_MIN, al5d_constants.CST_ANGLE_MAX)
+            pulse, exp["CST_PULSE_MIN"], exp["CST_PULSE_MAX"], exp["CST_ANGLE_MIN"], exp["CST_ANGLE_MAX"])
         return angle

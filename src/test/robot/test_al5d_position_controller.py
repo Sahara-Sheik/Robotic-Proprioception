@@ -38,14 +38,14 @@ class TestPosition(unittest.TestCase):
         print("Test passed")
         return 
 
-    def check_normalized_json(self, jsonfile):
+    def check_normalized_json(self, exp, jsonfile):
         with open(jsonfile) as file:
             data = json.load(file)
         datadict = data["rc-position-target"]
-        rp = RobotPosition(datadict)
-        normvector = rp.to_normalized_vector()
+        rp = RobotPosition(exp, datadict)
+        normvector = rp.to_normalized_vector(exp)
         print(f"{rp} norm {normvector}")
-        rp2 = RobotPosition.from_normalized_vector(normvector)
+        rp2 = RobotPosition.from_normalized_vector(exp, normvector)
         print(f"Reconstructed {rp2}")
         return rp        
 

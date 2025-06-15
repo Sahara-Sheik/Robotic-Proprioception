@@ -1,4 +1,12 @@
-from . import al5d_constants
+"""
+al5d_position_controller.py
+
+A high-level position controller for the al5d robot
+"""
+
+from exp_run_config import Config, Experiment
+Config.PROJECTNAME = "BerryPicker"
+# from . import al5d_constants
 import numpy as np
 # import serial
 # import time
@@ -11,8 +19,8 @@ import logging
 
 logging.basicConfig(level=logging.WARNING)
 
-POS_DEFAULT = {"height": 5.0, "distance": 5.0, "heading": 0.0, 
-               "wrist_angle": -45.0, "wrist_rotation": 75.0, "gripper": 100}
+# POS_DEFAULT = {"height": 5.0, "distance": 5.0, "heading": 0.0, 
+#                "wrist_angle": -45.0, "wrist_rotation": 75.0, "gripper": 100}
 
 #POS_MIN = {"height": 1.0, "distance": 1.0, "heading": -90.0, 
 #               "wrist_angle": -90.0, "wrist_rotation": 75.0 - 90.0, 
@@ -24,21 +32,22 @@ POS_DEFAULT = {"height": 5.0, "distance": 5.0, "heading": 0.0,
 
 # Handwired wrist-rotation for a much shorter range as it was creating problems.
 
-POS_MIN = {"height": 1.0, "distance": 3.0, "heading": -90.0, 
-               "wrist_angle": -90.0, "wrist_rotation": 60.0, 
-               "gripper": 0}
+# POS_MIN = {"height": 1.0, "distance": 3.0, "heading": -90.0, 
+#                "wrist_angle": -90.0, "wrist_rotation": 60.0, 
+#                "gripper": 0}
 
-POS_MAX = {"height": 5.0, "distance": 10.0, "heading": 90.0, 
-               "wrist_angle": 0.0, "wrist_rotation": 90.0, 
-               "gripper": 100}
+# POS_MAX = {"height": 5.0, "distance": 10.0, "heading": 90.0, 
+#                "wrist_angle": 0.0, "wrist_rotation": 90.0, 
+#                "gripper": 100}
 
 
 class RobotPosition:
-    """A data class describing the high level robot position"""
+    """A data class describing the high level robot position. 
+    The functions returning things here are heavily dependent on an exp of the position_controller type, but this will need to be passed on every time, as this class needs to remain lightweight."""
 
-    def __init__(self, values = None):
+    def __init__(self, exp, values = None):
         if values is None:
-            self.values = copy(POS_DEFAULT)
+            self.values = copy(exp["POS_DEFAULT"])
         else:
             self.values = copy(values)
     
@@ -49,42 +58,42 @@ class RobotPosition:
         self.values[key] = value
 
     @staticmethod
-    def limit(posc):
+    def limit(exp: Experiment, posc):
         """Verifies whether the given position is safe, defined between the mind and the max"""
         retval = True
         for fld in posc.values:
-            retval = retval and posc.values[fld] <= POS_MAX[fld]
-            retval = retval and posc.values[fld] >= POS_MIN[fld]
+            retval = retval and posc.values[fld] <= exp["POS_MAX"][fld]
+            retval = retval and posc.values[fld] >= exp["POS_MIN"][fld]
         return retval
 
-    def to_normalized_vector(self):
+    def to_normalized_vector(self, exp: Experiment):
         """Converts the positions to a normalized vector"""
         retval = np.zeros(6, dtype = np.float32)
         for i, fld in enumerate(self.values):
-            retval[i] = RobotHelper.map_ranges(self.values[fld], POS_MIN[fld], POS_MAX[fld])
+            retval[i] = RobotHelper.map_ranges(self.values[fld], exp["POS_MIN"][fld], exp["POS_MAX"][fld])
         return retval
 
     @staticmethod
-    def from_normalized_vector(values):
+    def from_normalized_vector(exp: Experiment, values):
         """Creates the rp from a normalized numpy vector"""
-        rp = RobotPosition()
+        rp = RobotPosition(exp)
         for i, fld in enumerate(rp.values):
-            rp.values[fld] = RobotHelper.map_ranges(values[i], 0.0, 1.0, POS_MIN[fld], POS_MAX[fld])
+            rp.values[fld] = RobotHelper.map_ranges(values[i], 0.0, 1.0, exp["POS_MIN"][fld], exp["POS_MAX"][fld])
         return rp
 
     @staticmethod
-    def from_vector(values):
+    def from_vector(exp: Experiment, values):
         """Creates a RobotPosition from a numpy vector"""
-        rp = RobotPosition()
+        rp = RobotPosition(exp)
         for i, fld in enumerate(rp.values):
             rp.values[fld] = values[i]
         return rp
 
-    def empirical_distance(self, other):
+    def empirical_distance(exp: Experiment, self, other):
         """A weighted distance function between two robot positions"""
         w = np.ones([6]) / 6.0
-        norm1 = np.array(self.to_normalized_vector())
-        norm2 = np.array(other.to_normalized_vector())
+        norm1 = np.array(self.to_normalized_vector(exp))
+        norm2 = np.array(other.to_normalized_vector(exp))
         val = np.inner(w, np.abs(norm1 - norm2))
         return val    
 
@@ -100,13 +109,14 @@ class PositionController:
     
     device = '/dev/ttyUSB0'
     """
-    def __init__(self, exp):
+    def __init__(self, exp: Experiment):
         self.exp = exp
-        self.device = exp["device"]
-        self.pulse_controller = PulseController(device = self.device)
+        self.exp_pulse = Config().get_experiment(exp["pulsecontroller_exp"], exp["pulsecontroller_run"])
+        self.device = self.exp_pulse["device"]
+        self.pulse_controller = PulseController(self.exp_pulse)
         self.pulse_controller.start_robot()
         self.angle_controller = AngleController(self.pulse_controller)
-        self.pos = RobotPosition()
+        self.pos = RobotPosition(exp)
         self.move(self.pos)
 
     def get_position(self):
@@ -256,11 +266,11 @@ class PositionController:
         angle_wrist_rotation = target["wrist_rotation"]
         # safety check here
         angles = np.zeros(5)
-        angles[al5d_constants.SERVO_ELBOW] = angle_elbow
-        angles[al5d_constants.SERVO_SHOULDER] = angle_shoulder
-        angles[al5d_constants.SERVO_WRIST] = angle_wrist
-        angles[al5d_constants.SERVO_WRIST_ROTATION] = angle_wrist_rotation
-        angles[al5d_constants.SERVO_Z] = angle_z
+        angles[self.exp["SERVO_ELBOW"]] = angle_elbow
+        angles[self.exp["SERVO_SHOULDER"]] = angle_shoulder
+        angles[self.exp["SERVO_WRIST"]] = angle_wrist
+        angles[self.exp["SERVO_WRIST_ROTATION"]] = angle_wrist_rotation
+        angles[self.exp["SERVO_Z"]] = angle_z
         self.angle_controller.control_angles(angles, target["gripper"])
         self.pos = target
 

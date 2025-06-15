@@ -27,9 +27,9 @@ def move_towards(current, target, max_velocity):
         return current - max_velocity
 
 def move_position_towards(current: RobotPosition, 
-    target: RobotPosition, ctrl):
+    target: RobotPosition, ctrl, exp):
     """Move a position towards the target with specific velocities"""
-    rv = RobotPosition()
+    rv = RobotPosition(exp)
     rv["height"] = move_towards(current["height"], target["height"], 
                              ctrl.v_height * ctrl.robot_interval)
     rv["distance"] = move_towards(current["distance"], target["distance"], 

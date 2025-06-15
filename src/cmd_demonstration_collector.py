@@ -96,7 +96,10 @@ def main():
     print("====== Starting the demonstration ========")
 
     # the robot position controller
-    robot_controller = PositionController(Config()["robot"]["usb_port"]) 
+    experiment = "robot_al5d"
+    run = "position_controller_00"
+    exp = Config().get_experiment(experiment, run)
+    robot_controller = PositionController(exp) 
 
     img_size = Config()["robot"]["saved_image_size"]
     # (256, 256) # was (128, 128)
@@ -137,8 +140,8 @@ def main():
             norm = [0] * 6
             for df in range(6):
                 norm[df] = random.random()                
-            rp = RobotPosition.from_normalized_vector(norm)
-            if RobotPosition.limit(rp):
+            rp = RobotPosition.from_normalized_vector(robot_controller.exp, norm)
+            if RobotPosition.limit(exp, rp):
                 print(f"added waypoint {rp}")
                 waypoints.append(rp)
             if len(waypoints) >= wpcount:

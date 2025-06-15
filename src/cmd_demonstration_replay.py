@@ -44,7 +44,10 @@ def main():
     print("======== Demonstration replay =========")
 
     print("Connecting to the robot (make sure it is on, and connected)")
-    robot_controller = PositionController(Config().values["robot"]["usb_port"]) 
+    experiment = "robot_al5d"
+    run = "position_controller_00"
+    exp = Config().get_experiment(experiment, run)
+    robot_controller = PositionController(exp) 
     print("Connection to robot successful")
 
     data_dir, task_dir = ui_choose_task()

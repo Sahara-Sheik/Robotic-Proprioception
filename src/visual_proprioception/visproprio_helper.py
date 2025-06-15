@@ -4,7 +4,7 @@ visproprio_helper.py
 Helper functions for visual proprioception training
 """
 
-from exp_run_config import Config
+from exp_run_config import Config, Experiment
 Config.PROJECTNAME = "BerryPicker"
 
 import pathlib
@@ -17,7 +17,7 @@ from robot.al5d_position_controller import RobotPosition
 
 import sensorprocessing.sp_helper as sp_helper
 
-def load_demonstrations_as_proprioception_training(sp, exp, spexp, datasetname, proprioception_input_file, proprioception_target_file, device=None):
+def load_demonstrations_as_proprioception_training(sp, exp: Experiment, spexp: Experiment, exp_robot: Experiment, datasetname, proprioception_input_file, proprioception_target_file, device=None):
     """Loads all the images from the specified dataset and creates the input and target tensors. """
     if proprioception_input_file.exists():
         retval = {}        
@@ -39,8 +39,8 @@ def load_demonstrations_as_proprioception_training(sp, exp, spexp, datasetname, 
             z = sp.process(sensor_readings)
             a = demo.get_action(i)
             #anorm = np.zeros(a.shape, np.float32)
-            rp = RobotPosition.from_vector(a)
-            anorm = rp.to_normalized_vector()
+            rp = RobotPosition.from_vector(exp_robot, a)
+            anorm = rp.to_normalized_vector(exp_robot)
             inp = torch.from_numpy(z)
             tgt = torch.from_numpy(anorm)
             inputlist.append(inp)
@@ -53,7 +53,7 @@ def load_demonstrations_as_proprioception_training(sp, exp, spexp, datasetname, 
     print(f"***load_demonstrations_as_proprioception_training*** \n\tSuccessfully recalculated the proprioception training and saved it to {proprioception_input_file} etc")    
     return retval            
 
-def load_multiview_demonstrations_as_proprioception_training(task, proprioception_input_file, proprioception_target_file, num_views=2):
+def load_multiview_demonstrations_as_proprioception_training(exp_robot, task, proprioception_input_file, proprioception_target_file, num_views=2):
     """
 
     FIXME: Sahara: this needs to be changed to match the single-view one above. 
@@ -124,7 +124,7 @@ def load_multiview_demonstrations_as_proprioception_training(task, proprioceptio
 
                 # Get the robot action for this timestep
                 a = bcd.get_a(i)
-                rp = RobotPosition.from_vector(a)
+                rp = RobotPosition.from_vector(exp_robot, a)
                 anorm = rp.to_normalized_vector()
                 targetlist.append(torch.from_numpy(anorm))
 

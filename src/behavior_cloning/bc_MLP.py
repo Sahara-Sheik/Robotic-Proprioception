@@ -1,7 +1,7 @@
 """
 bc_MLP.py
 
-MLP-based models for behavior cloning. They are 
+MLP-based models for behavior cloning. 
 """
 
 import sys

@@ -1,0 +1,50 @@
+# Baseline configuration for the pulse controller for the AL5D robot
+
+name: "pulsecontroller_00"
+no_servos: 6
+pulse_position_default: 1500
+device: '/dev/ttyUSB0' # FIXME, this will need to be set
+
+robot_start_speed: 100 # the speed with which the robot is brought to default
+
+# Constants - Speed in µs/s, 4000 is roughly equal to 360°/s or 60 RPM
+#           - A lower speed will most likely be more useful in real use, such as 100 µs/s (~9°/s)
+CST_ANGLE_MIN: 0
+CST_ANGLE_MAX: 180
+CST_PULSE_MIN: 500
+CST_PULSE_MAX: 2500
+
+# fixme this might be too large a range, but it is good for debugging
+#CST_PULSE_MIN = 0
+#CST_PULSE_MAX = 3000
+
+CST_SPEED_MAX: 4000
+CST_SPEED_FAST: 500
+CST_SPEED_DEFAULT: 100
+# time: in microseconds to travel from the current position to the
+# target position FIXME: this doesn't look like microseconds it is more like milliseconds
+TIME_DEFAULT: 50
+
+
+
+
+# the specific pulse correction that need to be added when translating
+# the angle to pulse.
+PULSE_CORRECTION:
+  SERVO_Z: 40 # there is some correction needed here...
+  SERVO_SHOULDER: -40
+  SERVO_ELBOW: 0
+  SERVO_WRIST: 0
+  SERVO_WRIST_ROTATION: 0
+  SERVO_GRIP: 0
+
+# the specific angle limits that need to be set for the servo by servo basis
+# this is probably specific for the AL5D as a robot design. Each is a value
+# [minimum, rest, maximum]
+ANGLE_LIMITS:
+  SERVO_Z: [0, 90, 180]
+  SERVO_SHOULDER: [0, 90, 180]
+  SERVO_ELBOW: [0, 90, 180]
+  SERVO_WRIST: [0, 90, 180]
+  SERVO_WRIST_ROTATION: [0, 90, 180]
+  SERVO_GRIP: [0, 90, 180]

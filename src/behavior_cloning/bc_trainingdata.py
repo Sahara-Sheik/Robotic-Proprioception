@@ -59,7 +59,7 @@ def create_trainingpair_prediction(x_seq: torch.Tensor, y_seq: torch.Tensor, seq
     return inputs_tensor, targets_tensor
 
 
-def create_trainingdata_bc(exp, spexp, device):
+def create_trainingdata_bc(exp, spexp, exp_robot, device):
     """Creates training data for training and validation with the demonstrations specified in the exp/run. Caches the results into the input and target files specified in the exp/run. Remove those files to recalculate."""
 
     exp.start_timer("data_preparation")
@@ -87,7 +87,7 @@ def create_trainingdata_bc(exp, spexp, device):
                 inputs_list.append(torch.from_numpy(z))
                 # the action we are choosing, is the next one
                 a = demo.get_action(i+1)
-                rp = RobotPosition.from_vector(a)
+                rp = RobotPosition.from_vector(exp_robot, a)
                 anorm = rp.to_normalized_vector()        
                 targets_list.append(torch.from_numpy(anorm))
             inputs_tensor = torch.stack(inputs_list)
