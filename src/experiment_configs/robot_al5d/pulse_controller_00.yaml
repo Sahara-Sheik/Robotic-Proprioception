@@ -1,6 +1,6 @@
 # Baseline configuration for the pulse controller for the AL5D robot
 
-name: "pulsecontroller_00"
+name: "pulse_controller_00"
 no_servos: 6
 pulse_position_default: 1500
 device: '/dev/ttyUSB0' # FIXME, this will need to be set
@@ -31,20 +31,20 @@ TIME_DEFAULT: 50
 # the specific pulse correction that need to be added when translating
 # the angle to pulse.
 PULSE_CORRECTION:
-  SERVO_Z: 40 # there is some correction needed here...
-  SERVO_SHOULDER: -40
-  SERVO_ELBOW: 0
-  SERVO_WRIST: 0
-  SERVO_WRIST_ROTATION: 0
-  SERVO_GRIP: 0
+  - 40 # SERVO_Z
+  - -40 # SERVO_SHOULDER
+  - 0 # SERVO_ELBOW
+  - 0 # SERVO_WRIST
+  - 0 # SERVO_WRIST_ROTATION
+  - 0 # SERVO_GRIP 
 
 # the specific angle limits that need to be set for the servo by servo basis
 # this is probably specific for the AL5D as a robot design. Each is a value
 # [minimum, rest, maximum]
 ANGLE_LIMITS:
-  SERVO_Z: [0, 90, 180]
-  SERVO_SHOULDER: [0, 90, 180]
-  SERVO_ELBOW: [0, 90, 180]
-  SERVO_WRIST: [0, 90, 180]
-  SERVO_WRIST_ROTATION: [0, 90, 180]
-  SERVO_GRIP: [0, 90, 180]
+  - [0, 90, 180] # SERVO_Z
+  - [0, 90, 180] # SERVO_SHOULDER
+  - [0, 90, 180] # SERVO_ELBOW
+  - [0, 90, 180] # SERVO_WRIST
+  - [0, 90, 180] # SERVO_WRIST_ROTATION
+  - [0, 90, 180] # SERVO_GRIP

@@ -24,3 +24,7 @@ training_data:
 validation_data:
   - ["freeform", "2024_12_26__16_40_20", "dev2"]
   - ["freeform", "2024_12_26__16_44_06", "dev2"]
+
+# the default robot controller info, if needed
+robot_exp: "robot_al5d"
+robot_run: "position_controller_00"
