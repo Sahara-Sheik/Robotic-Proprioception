@@ -76,6 +76,31 @@ def load_multiview_demonstrations_as_proprioception_training(exp_robot, task, pr
     Returns:
         Dictionary containing training and validation data splits
     """
+
+    ### FIXME, draft from Lotzi
+
+    # for val in exp[datasetname]:
+    #     run, demo_name, cameras = val
+    #     exp_demo = Config().get_experiment("demonstration", run)
+    #     demo = Demonstration(exp_demo, demo_name)
+    #     for i in range(demo.metadata["maxsteps"]):
+    #         S = []
+    #         for cam in cameras:
+    #             sensor_readings, _ = demo.get_image(i, camera=cam, transform=transform, device=device)
+    #             z = sp.process(sensor_readings)
+    #             S.append(sensor_readings)
+    #         # create the concatenated ... 
+    #         a = demo.get_action(i)
+    #         #anorm = np.zeros(a.shape, np.float32)
+    #         rp = RobotPosition.from_vector(exp_robot, a)
+    #         anorm = rp.to_normalized_vector(exp_robot)
+    #         inp = torch.from_numpy(z)
+    #         tgt = torch.from_numpy(anorm)
+    #         inputlist.append(inp)
+    #         targetlist.append(tgt)
+
+    ### END FIXME, draft from Lotzi
+
     retval = {}
     if proprioception_input_file.exists():
         print(f"Loading cached data from {proprioception_input_file}")
