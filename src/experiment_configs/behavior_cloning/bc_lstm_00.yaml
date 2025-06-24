@@ -2,8 +2,8 @@
 name: "bc_lstm_00"
 
 # information about the sp specified by the exp/run
-sp_experiment: 'sensorprocessing_conv_vae'
-sp_run: 'sp_vae_256'
+exp_sp: 'sensorprocessing_conv_vae'
+run_sp: 'sp_vae_256'
 
 # controller type
 controller: "bc_LSTM"

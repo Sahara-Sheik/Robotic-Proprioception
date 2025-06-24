@@ -59,7 +59,7 @@ def create_trainingpair_prediction(x_seq: torch.Tensor, y_seq: torch.Tensor, seq
     return inputs_tensor, targets_tensor
 
 
-def create_trainingdata_bc(exp, spexp, exp_robot, device):
+def create_trainingdata_bc(exp, exp_sp, exp_robot, device):
     """Creates training data for training and validation with the demonstrations specified in the exp/run. Caches the results into the input and target files specified in the exp/run. Remove those files to recalculate."""
 
     exp.start_timer("data_preparation")
@@ -71,8 +71,8 @@ def create_trainingdata_bc(exp, spexp, exp_robot, device):
         all_demos_inputs_list = []
         all_demos_targets_list = []
         # Create the sp object described in the experiment
-        sp = create_sp(spexp, device)
-        transform = get_transform_to_sp(spexp)
+        sp = create_sp(exp_sp, device)
+        transform = get_transform_to_sp(exp_sp)
         for val in exp["training_data"]: # for all demonstrations
             run, demo_name, camera = val
             exp_demo = Config().get_experiment("demonstration", run)

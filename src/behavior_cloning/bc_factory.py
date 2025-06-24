@@ -10,15 +10,15 @@ from bc_MLP import bc_MLP
 from bc_LSTM import bc_LSTM, bc_LSTM_Residual
 from bc_LSTM_MDN import bc_LSTM_MDN, mdn_loss
 
-def create_bc_model(exp, spexp, device):
+def create_bc_model(exp, exp_sp, device):
     if exp["controller"] == "bc_MLP":
-        model = bc_MLP(exp, spexp)
+        model = bc_MLP(exp, exp_sp)
     elif exp["controller"] == "bc_LSTM":
-        model = bc_LSTM(exp, spexp)
+        model = bc_LSTM(exp, exp_sp)
     elif exp["controller"] == "bc_LSTM_Residual":
-        model = bc_LSTM_Residual(exp, spexp)
+        model = bc_LSTM_Residual(exp, exp_sp)
     elif exp["controller"] == "bc_LSTM_MDN":
-        model = bc_LSTM_MDN(exp, spexp)
+        model = bc_LSTM_MDN(exp, exp_sp)
     else:
         raise Exception(f"Unknown controller specified {exp['controller']}")    
     model.to(device)

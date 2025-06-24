@@ -1,11 +1,11 @@
 name: "bc_lstm_mdn_00"
 
 # information about the sp specified by the exp/run
-sp_experiment: 'sensorprocessing_conv_vae'
-sp_run: 'sp_vae_256'
+exp_sp: 'sensorprocessing_conv_vae'
+run_sp: 'sp_vae_256'
 
-mdn_experiment: "behavior_cloning"
-mdn_run: "mdn_for_bc_00"
+exp_mdn: "behavior_cloning"
+run_mdn: "mdn_for_bc_00"
 
 # controller type
 controller: "bc_LSTM_MDN"

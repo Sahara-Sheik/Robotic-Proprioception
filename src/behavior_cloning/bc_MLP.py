@@ -15,10 +15,10 @@ import torch.nn as nn
 class bc_MLP(nn.Module):
     """An MLP model for hehavior cloning. Mostly specified through the exp/run"""
 
-    def __init__(self, exp, spexp):
+    def __init__(self, exp, exp_sp):
         super().__init__()
 
-        self.input_size = spexp["latent_size"]
+        self.input_size = exp_sp["latent_size"]
         self.output_size = exp["control_size"]  # deg. of freedom
         self.hidden_layers = exp["hidden_layers"]
         self.model = nn.Sequential()

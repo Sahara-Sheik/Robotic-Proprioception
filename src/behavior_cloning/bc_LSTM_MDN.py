@@ -23,10 +23,10 @@ class bc_LSTM_MDN(nn.Module):
     """
     LSTM w/ 3 layers and skip connections (residuals), followed by an MDN layer.
     """
-    def __init__(self, exp, spexp):
+    def __init__(self, exp, exp_sp):
         super().__init__()
 
-        self.input_size = spexp["latent_size"]
+        self.input_size = exp_sp["latent_size"]
         self.output_size = exp["control_size"]  # deg. of freedom
         self.hidden_size = exp["hidden_size"]
 
@@ -36,9 +36,7 @@ class bc_LSTM_MDN(nn.Module):
 
         self.lstm_3 = nn.LSTM(self.hidden_size, self.hidden_size, num_layers=1, batch_first=True)
 
-        experiment = exp["mdn_experiment"]
-        run = exp["mdn_run"]
-        exp_mdn = Config().get_experiment(experiment, run)
+        exp_mdn = Config().get_experiment(exp["exp_mdn"], exp["run_mdn"])
         self.mdn = MDN(exp_mdn)
 
     def forward(self, x):

@@ -16,11 +16,11 @@ import torch.nn as nn
 
 class bc_LSTM(nn.Module):
     """
-    Simple LSTM-based bahavior cloning module. Mostly specified through the exp/spexp
+    Simple LSTM-based bahavior cloning module. Mostly specified through the exp/exp_sp
     """
-    def __init__(self, exp, spexp):
+    def __init__(self, exp, exp_sp):
         super().__init__()
-        self.input_size = spexp["latent_size"]
+        self.input_size = exp_sp["latent_size"]
         self.output_size = exp["control_size"]  # deg. of freedom
         self.num_layers = exp["num_layers"]
         self.hidden_size = exp["hidden_size"]
@@ -46,10 +46,10 @@ class bc_LSTM_Residual(nn.Module):
     LSTM w/ 3 layers and skip connections (residuals), followed by a fully connected layer. 
     This is an attempt to recreate the LSTM model from the Rouhollah 2020 paper, without the MDN.
     """
-    def __init__(self, exp, spexp):
+    def __init__(self, exp, exp_sp):
         super().__init__()
 
-        self.input_size = spexp["latent_size"]
+        self.input_size = exp_sp["latent_size"]
         self.output_size = exp["control_size"]  # deg. of freedom
         self.hidden_size = exp["hidden_size"]
 
