@@ -1,3 +1,6 @@
+from exp_run_config import Config, Experiment
+Config.PROJECTNAME = "BerryPicker"
+
 import pathlib
 import papermill as pm
 
