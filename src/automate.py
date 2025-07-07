@@ -30,10 +30,12 @@ def automate_exprun(notebook, name, params):
       print(f"There was an exception {e}")
 
 if len(sys.argv) < 2:
+   print("No argument passed, running automate_00")
    experiment = "automate"
    run = "automate_00"
    exp = Config().get_experiment(experiment, run)
 else:
+   print(f"Running script {sys.argv[1]}")
    yaml_path = pathlib.Path(sys.argv[1])
    if not yaml_path.is_file():
       print(f"Error: File '{yaml_path}' does not exist.")
