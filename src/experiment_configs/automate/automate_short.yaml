@@ -14,7 +14,7 @@ exps_to_run:
       <<: *defaults
       run: 'sp_vae_128'
   - name: 'VerifyResNet50-128'
-    notebook: 'sensorprocessing/Verify_Propriotuned_CNN.ipynb'
+    notebook: 'sensorprocessing/Verify_ProprioTuned_CNN.ipynb'
     params:
       <<: *defaults
       run: 'resnet50_128'

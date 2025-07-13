@@ -52,22 +52,22 @@ exps_to_run:
       run: 'sp_vae_256'
 # Verify Propriotuned CNN
   - name: 'VerifyResNet50-128'
-    notebook: 'sensorprocessing/Verify_Propriotuned_CNN.ipynb'
+    notebook: 'sensorprocessing/Verify_ProprioTuned_CNN.ipynb'
     params:
       <<: *defaults
       run: 'resnet50_128'
   - name: 'VerifyResNet50-256'
-    notebook: 'sensorprocessing/Verify_Propriotuned_CNN.ipynb'
+    notebook: 'sensorprocessing/Verify_ProprioTuned_CNN.ipynb'
     params:
       <<: *defaults
       run: 'resnet50_256'
   - name: 'VerifyVgg19-128'
-    notebook: 'sensorprocessing/Verify_Propriotuned_CNN.ipynb'
+    notebook: 'sensorprocessing/Verify_ProprioTuned_CNN.ipynb'
     params:
       <<: *defaults
       run: 'vgg19_128'
   - name: 'VerifyVgg19-256'
-    notebook: 'sensorprocessing/Verify_Propriotuned_CNN.ipynb'
+    notebook: 'sensorprocessing/Verify_ProprioTuned_CNN.ipynb'
     params:
       <<: *defaults
       run: 'vgg19_256'
