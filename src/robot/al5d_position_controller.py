@@ -111,11 +111,12 @@ class PositionController:
     """
     def __init__(self, exp: Experiment):
         self.exp = exp
-        self.exp_pulse = Config().get_experiment(exp["pulsecontroller_exp"], exp["pulsecontroller_run"])
+        self.exp_pulse = Config().get_experiment(exp["exp_pulsecontroller"], exp["run_pulsecontroller"])
+        self.exp_angle = Config().get_experiment(exp["exp_anglecontroller"], exp["run_anglecontroller"])
         self.device = self.exp_pulse["device"]
         self.pulse_controller = PulseController(self.exp_pulse)
         self.pulse_controller.start_robot()
-        self.angle_controller = AngleController(self.pulse_controller)
+        self.angle_controller = AngleController(self.exp_angle, self.pulse_controller)
         self.pos = RobotPosition(exp)
         self.move(self.pos)
 

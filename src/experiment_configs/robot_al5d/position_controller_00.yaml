@@ -1,7 +1,11 @@
 # configuration data for the position controller
 
-pulsecontroller_exp: "robot_al5d"
-pulsecontroller_run: "pulse_controller_00"
+exp_pulsecontroller: "robot_al5d"
+run_pulsecontroller: "pulse_controller_00"
+
+exp_anglecontroller: "robot_al5d"
+run_anglecontroller: "angle_controller_00"
+
 
 POS_DEFAULT:
   "height": 5.0

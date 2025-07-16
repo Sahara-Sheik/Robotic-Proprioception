@@ -7,11 +7,11 @@ class AngleController:
     """Implements a robot controller for the AL5D robot which performs control in the terms of angles (for the joints) and distance for the gripper.
     """
 
-    def __init__(self, pulse_controller: PulseController, exp):
+    def __init__(self, exp, pulse_controller: PulseController):
         self.exp = exp
         self.pulse_controller = pulse_controller
         self.positions = np.ones(self.pulse_controller.cnt_servos-1) * \
-            RobotHelper.pulse_to_angle(
+            RobotHelper.pulse_to_angle(self.pulse_controller.exp,
                 self.pulse_controller.pulse_position_default)
         # FIXME: how do we set this?
         self.gripper_distance = 30

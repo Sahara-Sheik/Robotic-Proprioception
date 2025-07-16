@@ -69,7 +69,7 @@ class PulseController:
             command = f"#{servo} P{0}\r"
             self.sp.write(command.encode())
 
-    def control_servo_pulse(self, servo, pulse):
+    def control_servo_pulse(self, servo, pulse, speed):
         """Sends a command to the particular servo to move to the particular
         pulse value, moving with the specified speed.
         """

@@ -9,10 +9,10 @@ robot_start_speed: 100 # the speed with which the robot is brought to default
 
 # Constants - Speed in µs/s, 4000 is roughly equal to 360°/s or 60 RPM
 #           - A lower speed will most likely be more useful in real use, such as 100 µs/s (~9°/s)
-CST_ANGLE_MIN: 0
-CST_ANGLE_MAX: 180
 CST_PULSE_MIN: 500
 CST_PULSE_MAX: 2500
+CST_ANGLE_MIN: 0
+CST_ANGLE_MAX: 180
 
 # fixme this might be too large a range, but it is good for debugging
 #CST_PULSE_MIN = 0
