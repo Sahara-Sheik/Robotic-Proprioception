@@ -1,3 +1,5 @@
+#!/bin/bash
+set -x # turn on echo
 # create the config
 mkdir -p ~/.config/BerryPicker
 echo configpath: \"~/WORK/BerryPicker/cfg/settings.yaml\" > ~/.config/BerryPicker/mainsettings.yaml
@@ -23,4 +25,4 @@ mkdir -p ~/WORK/BerryPicker/vm
 cd ~/WORK/BerryPicker/vm
 python -m venv berrypickervenv
 source berrypickervenv/bin/activate
-pip install pyyaml papermill
+pip install pyyaml papermill numpy pyserial
