@@ -27,6 +27,8 @@ python -m venv berrypickervenv
 source berrypickervenv/bin/activate
 pip install pyyaml papermill numpy pyserial opencv-python
 pip install approxeng.input
+pip install pillow
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
 # install the script for approxeng
 cp ~/WORK/BerryPicker/src/BerryPicker/src/config_templates/microsoft_xbox_360_pad_v1118_p654.yaml ~/.approxeng.input/

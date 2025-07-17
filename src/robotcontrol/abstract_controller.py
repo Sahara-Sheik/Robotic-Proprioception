@@ -22,7 +22,7 @@ class AbstractController:
             self.pos_current = self.robot_controller.get_position()
         else:
             # FIXME: this won't work without at least the exp here.
-            self.pos_current = RobotPosition()
+            self.pos_current = RobotPosition(None)
         self.pos_target = copy(self.pos_current)
         # the home position
         self.pos_home = copy(self.pos_current)

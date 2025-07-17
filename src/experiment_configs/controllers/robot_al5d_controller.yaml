@@ -1,0 +1,6 @@
+# configuration for the al5d robot controller used in the demonstration
+
+device: "/dev/ttyUSB1"
+
+exp_positioncontroller: "robot_al5d"
+run_positioncontroller: "position_controller_00"
