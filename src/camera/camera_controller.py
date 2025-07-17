@@ -31,7 +31,7 @@ class CameraController:
             else:
                 self.capture_devs[f"dev{i}"] = cap
                 print(f"cap{i} works")
-        self.caption = f"Cameras: {self.capture_devs.keys()}"
+        self.caption = f"Cameras: {str(self.capture_devs.keys())}"
         self.images = {}
         self.visualize = True # if true, visualizes the captured images
 
