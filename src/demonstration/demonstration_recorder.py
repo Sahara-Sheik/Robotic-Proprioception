@@ -42,10 +42,10 @@ class DemonstrationRecorder:
         save_prefix = f"{self.counter:05d}"
         # writing the robot data if the robot is available
         if self.robot_controller:
-            assert len(self.demonstration.action) == self.counter
+            assert len(self.demonstration.actions) == self.counter
             assert self.demonstration.metadata["maxsteps"] == self.counter
             data = {}
-            data["rc-position-target"] = copy.copy(self.remote_control.os_target.values)
+            data["rc-position-target"] = copy.copy(self.remote_control.pos_target.values)
             data["rc-angle-target"] = self.robot_controller.angle_controller.as_dict()
             data["rc-pulse-target"] = self.robot_controller.pulse_controller.as_dict()
             self.demonstration.actions.append(data)
