@@ -44,8 +44,13 @@ class PulseController:
         #         sys.exit(1)            
         # else:
         #     self.sp = sp
-        self.sp = serial.Serial(exp["device"], 9600)
-        self.command_finished = True
+        try:
+            self.sp = serial.Serial(exp["device"], 9600)
+            self.command_finished = True
+        except serial.SerialException as se:
+            print(f"Try out the backup {exp['device_backup']}")
+            self.sp = serial.Serial(exp["device_backup"], 9600)
+            self.command_finished = True
 
     def as_dict(self):
         """Returns the pulse configuration as a dictionary, to be put into a saved json file"""

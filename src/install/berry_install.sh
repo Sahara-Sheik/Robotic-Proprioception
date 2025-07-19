@@ -25,6 +25,7 @@ mkdir -p ~/WORK/BerryPicker/vm
 cd ~/WORK/BerryPicker/vm
 python -m venv berrypickervenv
 source berrypickervenv/bin/activate
+pip install ipykernel
 pip install pyyaml papermill numpy pyserial opencv-python
 pip install approxeng.input
 pip install pillow matplotlib
