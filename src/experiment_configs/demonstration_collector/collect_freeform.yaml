@@ -3,6 +3,10 @@
 
 demonstration_name: "freeform"
 
+# specification of the controllers that are being used on this setup
+# this depends both on the particular machine as well as what components are being used 
+# at this moment. 
+
 primary_controller: "xbox"
 available_robot: True
 

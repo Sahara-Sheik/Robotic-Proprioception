@@ -1,0 +1,21 @@
+# the most default demonstration collector - it collects demos into the freeform demonstration
+# note that these can be later moved to other ones
+
+
+
+demonstration_name: "freeform-raven"
+
+primary_controller: "xbox"
+available_robot: True
+
+exp_position_controller: "robot_al5d"
+run_position_controller: "position_controller_raven"
+
+exp_camera_controller: "controllers"
+run_camera_controller: "camera_controller_raven"
+
+exp_keyboard_controller: "controllers"
+run_keyboard_controller: "keyboard_controller"
+
+exp_gamepad_controller: "controllers"
+run_gamepad_controller: "gamepad_x360_controller"
