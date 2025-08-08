@@ -28,7 +28,7 @@ source berrypickervenv/bin/activate
 pip install ipykernel
 pip install pyyaml papermill numpy pyserial opencv-python
 pip install approxeng.input
-pip install pillow matplotlib
+pip install pillow matplotlib pandas
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
 # install the script for approxeng
