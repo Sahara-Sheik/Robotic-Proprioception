@@ -79,8 +79,10 @@ class Demonstration:
             with open(metadata_path) as file:
                 self.metadata = yaml.safe_load(file)
             action_path = pathlib.Path(self.demo_dir, "_action.yaml")
+            # FIXME: this change is needed because the demonstration collector puts actions as numpy arrays. It should not.
             with open(action_path) as file:
-                self.actions = yaml.safe_load(file)
+                # self.actions = yaml.safe_load(file)
+                self.actions = yaml.load(file, Loader=yaml.UnsafeLoader)
             annotation_path = pathlib.Path(self.demo_dir, "_annotation.yaml")
             with open(annotation_path) as file:
                 self.annotations = yaml.safe_load(file)

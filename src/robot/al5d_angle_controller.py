@@ -22,10 +22,10 @@ class AngleController:
         return f"RobotAngleController positions = {self.positions} gripper={self.gripper_distance}"
 
     def as_dict(self):
-        """Return the angles as a dictionary, for saving"""
+        """Return the angles as a dictionary, for saving into a yaml file"""
         retval = {}
         for i, v in enumerate(self.positions):
-            retval[i] = v
+            retval[i] = v.item()
         return retval
 
     def control_servo_angle(self, exp_angle: Experiment, exp_pulse: Experiment, servo, angle):

@@ -53,10 +53,10 @@ class PulseController:
             self.command_finished = True
 
     def as_dict(self):
-        """Returns the pulse configuration as a dictionary, to be put into a saved json file"""
+        """Returns the pulse configuration as a dictionary of lists, to be put into a saved yaml file"""
         retval = {}
         for i in range(self.cnt_servos):
-            retval[i] = self.positions_pulse[i]
+            retval[i] = self.positions_pulse[i].item()
         return retval
             
     def start_robot(self, speed=100):
