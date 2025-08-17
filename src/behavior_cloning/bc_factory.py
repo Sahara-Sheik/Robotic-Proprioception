@@ -4,11 +4,17 @@ bc_factory.py
 Creating different models for behavior cloning based on the specification in the exp/run
 """
 
+import pathlib
+import socket
 import torch.nn as nn
 import torch.optim as optim
 from bc_MLP import bc_MLP
 from bc_LSTM import bc_LSTM, bc_LSTM_Residual
 from bc_LSTM_MDN import bc_LSTM_MDN, mdn_loss
+
+from exp_run_config import Config
+Config.PROJECTNAME = "BerryPicker"
+
 
 def create_bc_model(exp, exp_sp, device):
     if exp["controller"] == "bc_MLP":
@@ -46,3 +52,45 @@ def create_optimizer(exp, model):
     else:
         raise Exception("Optimizer {exp['optimizer']} not implemented yet")
     return optimizer
+
+def external_setup(setupname):
+    """Create an external directory 'setupname' where the generated exp/runs and results will go. This allows separating a set of experiments both for training and robot running. 
+
+    Under this directory, there will be two directories:
+    * 'exprun' - contains the copied necessary expruns from the source code + the programatically generated expruns. 
+    * 'result' - contains the training data and the trained models. 
+    
+    The training data should go into result/demonstration under some directory (eg. touch-apple).
+    """
+        # host specific directories
+    hostname = socket.gethostname()
+    print(f"Hostname is {hostname}")
+    if hostname == "raven":
+        raise Exception("Not configured yet")
+    elif hostname == "szenes.local":
+        bc_path = pathlib.Path(f"~/Documents/Develop/Data/{setupname}").expanduser()
+    elif hostname == "glassy":
+        bc_path = pathlib.Path(f"~/Work/_DataExternal/{setupname}").expanduser()
+    else:
+        bc_path = pathlib.Path(Config()["experiment_external"], setupname)
+
+    exprun_path = pathlib.Path(bc_path, "exprun")
+    result_path = pathlib.Path(bc_path, "result")
+
+    print(f"Path for external experiments: {exprun_path}")
+    exprun_path.mkdir(exist_ok=True, parents=True)
+    print(f"Path for external data: {result_path}")
+    result_path.mkdir(exist_ok=True, parents=True)
+
+    Config().set_experiment_path(exprun_path)
+    Config().set_experiment_data(result_path)
+
+    # Copy the necessary experiments into the external directory
+    Config().copy_experiment("demonstration")
+    Config().copy_experiment("sensorprocessing_conv_vae")
+    Config().copy_experiment("robot_al5d")
+    Config().copy_experiment("automate")
+    Config().copy_experiment("behavior_cloning")
+    Config().copy_experiment("controllers")
+
+    return exprun_path, result_path

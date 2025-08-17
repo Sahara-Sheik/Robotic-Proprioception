@@ -240,7 +240,7 @@ class Config:
             current_directory = pathlib.Path(__file__).resolve().parent    
             runs = pathlib.Path(self.experiment_path, exp_name)
             if not runs.exists():
-                raise Exception("No experiment named {exp_name} in the current context")
+                raise Exception(f"No experiment named {exp_name} in the current context")
             runs = [p.stem for p in runs.iterdir() if p.is_file() and p.suffix == ".yaml"]
             return runs
         # if we are specifying done_only, we are listing them from the 
