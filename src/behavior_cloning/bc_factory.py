@@ -66,7 +66,7 @@ def external_setup(setupname):
     hostname = socket.gethostname()
     print(f"Hostname is {hostname}")
     if hostname == "raven":
-        raise Exception("Not configured yet")
+        bc_path = pathlib.Path(f"~/WORK/_DataExternal/{setupname}").expanduser()
     elif hostname == "szenes.local":
         bc_path = pathlib.Path(f"~/Documents/Develop/Data/{setupname}").expanduser()
     elif hostname == "glassy":

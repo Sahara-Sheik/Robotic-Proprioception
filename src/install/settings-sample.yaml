@@ -9,4 +9,4 @@
 conv_vae:
   # Directory for the checkout of the CONV_VAE project 
   # https://github.com/julian-8897/Conv-VAE-PyTorch
-  code_dir: '~/WORK/src/Julian-8897-Conv-VAE-PyTorch/Conv-VAE-PyTorch'
+  code_dir: '~/WORK/BerryPicker/src/Conv-VAE-PyTorch'

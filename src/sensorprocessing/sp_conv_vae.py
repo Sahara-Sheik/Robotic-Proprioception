@@ -11,7 +11,22 @@ sys.path.append("..")
 from exp_run_config import Config
 Config.PROJECTNAME = "BerryPicker"
 
-sys.path.append(Config().values["conv_vae"]["code_dir"])
+from pathlib import Path
+# verifying pathlib is clean
+import pathlib
+print(pathlib.__file__)
+
+vaepath = Path(Config().values["conv_vae"]["code_dir"]).expanduser()
+sys.path.append(str(vaepath))
+
+# This is some weird stuff where Torch cannot find pathlib
+import os
+sys.modules["pathlib._local"] = pathlib 
+if os.name == 'nt':
+   pathlib.PosixPath = pathlib.WindowsPath
+else:
+   pathlib.WindowsPath = pathlib.PosixPath
+
 
 import torch
 
@@ -27,7 +42,6 @@ from torchvision import transforms
 from torch.autograd import Variable
 import matplotlib.pyplot as plt
 import argparse
-from pathlib import Path
 
 # from mpl_toolkits.axes_grid1 import ImageGrid
 
