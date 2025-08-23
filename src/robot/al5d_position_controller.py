@@ -44,6 +44,7 @@ class RobotPosition:
 
     def __init__(self, exp, values = None):
         if values is None:
+            print(exp["POS_DEFAULT"])
             self.values = copy(exp["POS_DEFAULT"])
         else:
             self.values = copy(values)
