@@ -23,6 +23,7 @@ class CameraController:
         self.exp = exp
         self.img_size = exp["saved_image_size"]
         # create the capture devices
+        self.caption = "Cameras: "
         self.capture_devs = {}
         for i in exp["active_camera_list"]:
             cap = cv2.VideoCapture(i) 
@@ -30,8 +31,9 @@ class CameraController:
                 print(f"Warning: unable to open video source: {i}")
             else:
                 self.capture_devs[f"dev{i}"] = cap
+                self.caption += f"dev{i} "
                 print(f"cap{i} works")
-        self.caption = f"Cameras: {str(self.capture_devs.keys())}"
+        self.caption += "Press q to quit"
         self.images = {}
         self.visualize = True # if true, visualizes the captured images
 
@@ -46,6 +48,8 @@ class CameraController:
         Takes captures from all the active cameras, processes them, updates the window and optionally saves the images. Returns the key returned by waitKey()
 
         This one works, but it breaks down as soon as we have too many cameras
+        
+        If it returns True, a key to exit was pressed
         """
         for index in self.capture_devs:
             cap = self.capture_devs[index]
@@ -62,6 +66,6 @@ class CameraController:
             if self.visualize:
                 cv2.imshow(self.caption, concatenated_image)
                 key = cv2.waitKey(1)
-                return key
+                return (key & 0xFF) == ord('q')
         except:
             print("Error at visualization? ")
