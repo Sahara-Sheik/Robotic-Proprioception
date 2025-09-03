@@ -17,6 +17,41 @@ from robot.al5d_position_controller import RobotPosition
 
 import sensorprocessing.sp_helper as sp_helper
 
+
+def external_setup(setupname, rootdir: pathlib.Path):
+    """Create an external directory 'setupname' under rootdir, where the generated exp/runs and results will go. This allows separating a set of experiments both for training and robot running. 
+
+    Under this directory, there will be two directories:
+    * 'exprun' - contains the copied necessary expruns from the source code + the programatically generated expruns. 
+    * 'result' - contains the training data and the trained models. 
+    
+    The training data should go into result/demonstration under some directory (eg. touch-apple).
+    """
+    setup_path = pathlib.Path(rootdir, setupname)
+    exprun_path = pathlib.Path(setup_path, "exprun")
+    result_path = pathlib.Path(setup_path, "result")
+
+    print(f"***Path for external experiments:\n{exprun_path}")
+    exprun_path.mkdir(exist_ok=True, parents=True)
+    print(f"***Path for external data:\n{result_path}")
+    result_path.mkdir(exist_ok=True, parents=True)
+
+    Config().set_experiment_path(exprun_path)
+    Config().set_experiment_data(result_path)
+
+    # Copy the necessary experiments into the external directory
+    Config().copy_experiment("demonstration")
+    Config().copy_experiment("sensorprocessing_conv_vae")
+    Config().copy_experiment("sensorprocessing_propriotuned_cnn")
+    Config().copy_experiment("sensorprocessing_propriotuned_Vit")
+    Config().copy_experiment("sensorprocessing_aruco")
+    Config().copy_experiment("visual_proprioception")
+
+    return exprun_path, result_path
+
+
+
+
 def load_demonstrations_as_proprioception_training(sp, exp: Experiment, spexp: Experiment, exp_robot: Experiment, datasetname, proprioception_input_file, proprioception_target_file, device=None):
     """Loads all the images from the specified dataset and creates the input and target tensors. """
     if proprioception_input_file.exists():

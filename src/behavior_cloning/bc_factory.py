@@ -53,7 +53,7 @@ def create_optimizer(exp, model):
         raise Exception("Optimizer {exp['optimizer']} not implemented yet")
     return optimizer
 
-def external_setup(setupname):
+def external_setup(setupname, rootdir: pathlib.Path):
     """Create an external directory 'setupname' where the generated exp/runs and results will go. This allows separating a set of experiments both for training and robot running. 
 
     Under this directory, there will be two directories:
@@ -62,24 +62,13 @@ def external_setup(setupname):
     
     The training data should go into result/demonstration under some directory (eg. touch-apple).
     """
-        # host specific directories
-    hostname = socket.gethostname()
-    print(f"Hostname is {hostname}")
-    if hostname == "raven":
-        bc_path = pathlib.Path(f"~/WORK/_DataExternal/{setupname}").expanduser()
-    elif hostname == "szenes.local":
-        bc_path = pathlib.Path(f"~/Documents/Develop/Data/{setupname}").expanduser()
-    elif hostname == "glassy":
-        bc_path = pathlib.Path(f"~/Work/_DataExternal/{setupname}").expanduser()
-    else:
-        bc_path = pathlib.Path(Config()["experiment_external"], setupname)
+    setup_path = pathlib.Path(rootdir, setupname)
+    exprun_path = pathlib.Path(setup_path, "exprun")
+    result_path = pathlib.Path(setup_path, "result")
 
-    exprun_path = pathlib.Path(bc_path, "exprun")
-    result_path = pathlib.Path(bc_path, "result")
-
-    print(f"Path for external experiments: {exprun_path}")
+    print(f"***Path for external experiments:\n{exprun_path}")
     exprun_path.mkdir(exist_ok=True, parents=True)
-    print(f"Path for external data: {result_path}")
+    print(f"***Path for external data:\n{result_path}")
     result_path.mkdir(exist_ok=True, parents=True)
 
     Config().set_experiment_path(exprun_path)

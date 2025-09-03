@@ -208,13 +208,13 @@ class Config:
             assert source_path.exists()
             target_path = pathlib.Path(self.experiment_path, exp_name, run_name + ".yaml")
             shutil.copy2(source_path, target_path)
-            self.__log(f"Exp/run {exp_name}/{run_name} copied to {target_path}")
+            self.__log(f"Exp/run {exp_name}/{run_name} copied to\n {target_path}")
         else: # copy the full directory
             source_path = pathlib.Path(self.experiment_path_internal, exp_name)
             assert source_path.exists()
             target_path = pathlib.Path(self.experiment_path, exp_name)
             shutil.copytree(source_path, target_path,  dirs_exist_ok=True)
-            self.__log(f"Experiment {exp_name} copied to {target_path}")
+            self.__log(f"Experiment {exp_name} copied to\n{target_path}")
 
     def create_exprun_variant(self, exp_name, run_name, changes = {}, new_run_name=None):
         """Creates a variation of the experiment"""
