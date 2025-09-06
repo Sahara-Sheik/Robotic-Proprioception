@@ -38,7 +38,7 @@ class GamepadController(AbstractController):
                     # if we are exiting, call the stopping of the robot, of the recording and the vision
                     if self.exit_control:
                         self.stop()
-                        break;
+                        break
                     self.control_robot() 
                     self.update()
                     # go to sleep for the reminder of the allocated time slot. 

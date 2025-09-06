@@ -96,10 +96,10 @@ class RobotPosition:
         return val    
 
     def __str__(self):
-        retval = "Position: "
+        retval = "Position: \n"
         for fld in self.values:
             v = self.values[fld]            
-            retval += f" {fld}:{v:.2f}"
+            retval += f" {fld}:{v:.2f}\n"
         return retval
 
 class PositionController:

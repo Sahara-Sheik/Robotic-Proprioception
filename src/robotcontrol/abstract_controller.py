@@ -10,7 +10,7 @@ from robot.al5d_position_controller import RobotPosition, PositionController
 
 import logging
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.WARNING)
 
 class AbstractController:
     """An abstract class representing the ancestor of all classes that are used to perform high-level control the robot. Most of the classes here are something like remote control"""
