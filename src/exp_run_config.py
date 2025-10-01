@@ -204,6 +204,9 @@ class Config:
         self.values["experiment_data"] = path
         self.__log(f"Experiment data path changed to {self.values['experiment_data']}")
 
+    def get_results_path(self):
+        return self.values["experiment_data"]
+
     def set_experiment_data(self, path: pathlib.Path):
         raise Exception("set_experiment_data is deprecated, use set_results_path instead") 
 
