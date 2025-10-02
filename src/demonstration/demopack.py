@@ -31,6 +31,25 @@ def group_chooser_sp_bc_trivial(demo_names):
         retval[f"bc_testing_{i:05d}"] = demo_name
     return retval
 
+def group_chooser_sp_vp_trivial(demo_names):
+    """Copy all the data to sp, bc both training and testing. Note that this overlaps the training and testing so it is not a good idea in general."""
+    retval = {}
+    # the sensorprocessing data
+    for i, demo_name in enumerate(demo_names):
+        retval[f"sp_training_{i:05d}"] = demo_name
+    for i, demo_name in enumerate(demo_names):
+        retval[f"sp_validation_{i:05d}"] = demo_name
+    for i, demo_name in enumerate(demo_names):
+        retval[f"sp_testing_{i:05d}"] = demo_name
+    # the behavior cloninng data
+    for i, demo_name in enumerate(demo_names):
+        retval[f"vp_training_{i:05d}"] = demo_name
+    for i, demo_name in enumerate(demo_names):
+        retval[f"vp_validation_{i:05d}"] = demo_name
+    for i, demo_name in enumerate(demo_names):
+        retval[f"vp_testing_{i:05d}"] = demo_name
+    return retval
+
 def import_demopack(demo_path, group_chooser):
     assert(demo_path.is_dir())
     # get these from the config
