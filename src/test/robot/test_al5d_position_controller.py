@@ -11,7 +11,6 @@ from exp_run_config import Config
 Config.PROJECTNAME = "BerryPicker"
 
 from robot.al5d_position_controller import RobotPosition
-from demonstration.encoded_demonstrations import BCDemonstration
 
 class TestPosition(unittest.TestCase):
     """Unit tests for the position object"""

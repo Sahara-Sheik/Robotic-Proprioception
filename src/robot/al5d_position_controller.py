@@ -16,33 +16,15 @@ import logging
 
 logging.basicConfig(level=logging.WARNING)
 
-# POS_DEFAULT = {"height": 5.0, "distance": 5.0, "heading": 0.0, 
-#                "wrist_angle": -45.0, "wrist_rotation": 75.0, "gripper": 100}
-
-#POS_MIN = {"height": 1.0, "distance": 1.0, "heading": -90.0, 
-#               "wrist_angle": -90.0, "wrist_rotation": 75.0 - 90.0, 
-#               "gripper": 0}
-
-#POS_MAX = {"height": 5.0, "distance": 10.0, "heading": 90.0, 
-#               "wrist_angle": 90.0, "wrist_rotation": 75.0 + 90.0, 
-#               "gripper": 100}
-
-# Handwired wrist-rotation for a much shorter range as it was creating problems.
-
-# POS_MIN = {"height": 1.0, "distance": 3.0, "heading": -90.0, 
-#                "wrist_angle": -90.0, "wrist_rotation": 60.0, 
-#                "gripper": 0}
-
-# POS_MAX = {"height": 5.0, "distance": 10.0, "heading": 90.0, 
-#                "wrist_angle": 0.0, "wrist_rotation": 90.0, 
-#                "gripper": 100}
-
-
 class RobotPosition:
     """A data class describing the high level robot position. 
     The functions returning things here are heavily dependent on an exp of the position_controller type, but this will need to be passed on every time, as this class needs to remain lightweight."""
 
+    FIELDS = ["height", "distance", "heading", "wrist_angle", "wrist_rotation", "gripper"]
+
     def __init__(self, exp, values = None):
+        # writing this list here to ensure that we have it in the right order
+        # this should be used for iteration, not the values
         if values is None:
             print(exp["POS_DEFAULT"])
             self.values = copy(exp["POS_DEFAULT"])
@@ -59,7 +41,7 @@ class RobotPosition:
     def limit(exp: Experiment, posc):
         """Verifies whether the given position is safe, defined between the mind and the max"""
         retval = True
-        for fld in posc.values:
+        for fld in RobotPosition.FIELDS:
             retval = retval and posc.values[fld] <= exp["POS_MAX"][fld]
             retval = retval and posc.values[fld] >= exp["POS_MIN"][fld]
         return retval
@@ -67,7 +49,7 @@ class RobotPosition:
     def to_normalized_vector(self, exp: Experiment):
         """Converts the positions to a normalized vector"""
         retval = np.zeros(6, dtype = np.float32)
-        for i, fld in enumerate(self.values):
+        for i, fld in enumerate(RobotPosition.FIELDS):
             retval[i] = RobotHelper.map_ranges(self.values[fld], exp["POS_MIN"][fld], exp["POS_MAX"][fld])
         return retval
 
@@ -75,7 +57,7 @@ class RobotPosition:
     def from_normalized_vector(exp: Experiment, values):
         """Creates the rp from a normalized numpy vector"""
         rp = RobotPosition(exp)
-        for i, fld in enumerate(rp.values):
+        for i, fld in enumerate(RobotPosition.FIELDS):
             rp.values[fld] = RobotHelper.map_ranges(values[i], 0.0, 1.0, exp["POS_MIN"][fld], exp["POS_MAX"][fld])
         return rp
 
@@ -83,7 +65,7 @@ class RobotPosition:
     def from_vector(exp: Experiment, values):
         """Creates a RobotPosition from a numpy vector"""
         rp = RobotPosition(exp)
-        for i, fld in enumerate(rp.values):
+        for i, fld in enumerate(RobotPosition.FIELDS):
             rp.values[fld] = values[i]
         return rp
 
@@ -97,7 +79,7 @@ class RobotPosition:
 
     def __str__(self):
         retval = "Position: \n"
-        for fld in self.values:
+        for fld in RobotPosition.FIELDS:
             v = self.values[fld]            
             retval += f" {fld}:{v:.2f}\n"
         return retval
@@ -125,58 +107,6 @@ class PositionController:
         self.pulse_controller.stop_robot()
 
     @staticmethod
-    def ik_shoulder_elbow_wrist_old(target:RobotPosition):
-        """Performs the inverse kinematics necessary to the height and distance"""
-        # if AL5D - a set of constants that are used in the
-        A = 5.75
-        B = 7.375
-        #rtod = 57.295779  # Radians to degrees constant
-
-        # position_distance should be larger than zero
-        if target.distance <= 0:
-            raise Exception("x <= 0")
-
-        #angle_elbow = 0
-        #angle_shoulder = 0
-        #angle_wrist = 0
-        # Get distance and check it for error
-        m = sqrt((target.height * target.height) + (target.distance * target.distance))
-        # this cannot happen, I think
-        #if(m <= 0):
-        #    raise Exception("m <= 0")
-        # Get first angle (radians)
-        a1 = degrees( atan(target.height / target.distance) )
-        # Get 2nd angle (radians)
-        a2 = degrees( acos((A * A - B * B + m * m) / ((A * 2) * m)) )
-        #	print("floatA2       = " + str(floatA2))
-
-        # Calculate elbow angle (radians)
-        angle_elbow =  degrees( acos((A * A + B * B - m * m) / ((A * 2) * B)) )
-        #	print("floatElbow    = " + str(floatElbow))
-
-        # Calculate shoulder angle (radians)
-        angle_shoulder = a1 + a2
-        #	print("floatShoulder = " + str(floatShoulder))
-
-        # Obtain angles for shoulder / elbow
-        #angle_elbow = floatElbow * rtod
-        #	print("Elbow         = " + str(floatA2))
-        #angle_shoulder = floatShoulder * rtod
-        #	print("Shoulder      = " + str(Shoulder))
-
-        # Check elbow/shoulder angle for error
-        if (angle_elbow <= 0) or (angle_shoulder <= 0):
-            raise Exception("Elbow <=0 or Shoulder <=0")
-        angle_wrist = fabs(target.wrist_angle - angle_elbow - angle_shoulder) - 90
-
-        # corrections compared to the system I got
-        angle_elbow = 180 - int(angle_elbow) - 20         
-        angle_shoulder = int(angle_shoulder)
-        # It seems that this goes in the opposite direction - or the way they added it up in the calculation was incorrect and you need the elbow removed
-        angle_wrist = 180 - int(angle_wrist) + 25 # zero is vertical
-        return angle_shoulder, angle_elbow, angle_wrist
-
-    @staticmethod
     def ik_shoulder_elbow_wrist(target:RobotPosition):
         """Performs the inverse kinematics necessary to the height and distance"""
         # if AL5D - a set of constants that are used in the
@@ -198,57 +128,6 @@ class PositionController:
         if (angle_elbow <= 0) or (angle_shoulder <= 0):
             raise Exception("Elbow <=0 or Shoulder <=0")
         angle_wrist = fabs(target["wrist_angle"] - angle_elbow - angle_shoulder) - 90
-        # corrections compared to the system I got
-        angle_elbow = 180 - int(angle_elbow) - 20         
-        angle_shoulder = int(angle_shoulder)
-        # It seems that this goes in the opposite direction - or the way they added it up in the calculation was incorrect and you need the elbow removed
-        angle_wrist = 180 - int(angle_wrist) + 25 # zero is vertical
-        return angle_shoulder, angle_elbow, angle_wrist
-
-
-    @staticmethod
-    def ik_shoulder_elbow_wrist_old(target:RobotPosition):
-        """Performs the inverse kinematics necessary to the height and distance"""
-        # if AL5D - a set of constants that are used in the
-        A = 5.75
-        B = 7.375
-        # position_distance should be larger than zero
-        if target.distance <= 0:
-            raise Exception("x <= 0")
-
-        #angle_elbow = 0
-        #angle_shoulder = 0
-        #angle_wrist = 0
-        # Get distance and check it for error
-        m = sqrt((target.height * target.height) + (target.distance * target.distance))
-        # this cannot happen, I think
-        #if(m <= 0):
-        #    raise Exception("m <= 0")
-        # Get first angle (radians)
-        a1 = degrees( atan(target.height / target.distance) )
-        # Get 2nd angle (radians)
-        a2 = degrees( acos((A * A - B * B + m * m) / ((A * 2) * m)) )
-        #	print("floatA2       = " + str(floatA2))
-
-        # Calculate elbow angle (radians)
-        angle_elbow =  degrees( acos((A * A + B * B - m * m) / ((A * 2) * B)) )
-        #	print("floatElbow    = " + str(floatElbow))
-
-        # Calculate shoulder angle (radians)
-        angle_shoulder = a1 + a2
-        #	print("floatShoulder = " + str(floatShoulder))
-
-        # Obtain angles for shoulder / elbow
-        #angle_elbow = floatElbow * rtod
-        #	print("Elbow         = " + str(floatA2))
-        #angle_shoulder = floatShoulder * rtod
-        #	print("Shoulder      = " + str(Shoulder))
-
-        # Check elbow/shoulder angle for error
-        if (angle_elbow <= 0) or (angle_shoulder <= 0):
-            raise Exception("Elbow <=0 or Shoulder <=0")
-        angle_wrist = fabs(target.wrist_angle - angle_elbow - angle_shoulder) - 90
-
         # corrections compared to the system I got
         angle_elbow = 180 - int(angle_elbow) - 20         
         angle_shoulder = int(angle_shoulder)
