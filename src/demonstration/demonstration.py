@@ -17,13 +17,16 @@ from sensorprocessing.sp_helper import load_picturefile_to_tensor, load_capture_
 from torchvision import transforms
 
 
-def list_demos(exp, prefix: None):
+def list_demos(exp, prefix = None):
     """List all the demonstrations described in an exp/run. This can be passed as the second argument of the Demonstration constructor."""
     demos = [item.name for item in exp.data_dir().iterdir() if item.is_dir()]
     if prefix is None:
         return demos
-    else:
-        return [s for s in strings if s.startswith("_"+prefix)]
+    else:        
+        #retval = [s for s in demos if s.startswith(prefix+"_")]
+        #print("retval", retval)
+        #return retval
+        return [s for s in demos if s.startswith(prefix+"_")]
 
 def select_demo(exp, force_choice=None, force_name=None):
     """Interactively select one one the demonstrations, or force the choice to a number or a name."""
