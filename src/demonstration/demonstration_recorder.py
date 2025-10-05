@@ -7,16 +7,10 @@ Code that helps in recording ongoing demonstrations
 import sys
 sys.path.append("..")
 
-
-
-# from robotcontrol.gamepad_controller import GamepadController
-# from robotcontrol.keyboard_controller import KeyboardController
-# from robotcontrol.program_controller import ProgramController
-from robot.al5d_position_controller import PositionController, RobotPosition
+from robot.al5d_position_controller import PositionController
 from camera.camera_controller import CameraController
 import pathlib
 import cv2
-import json
 import copy
 
 
@@ -36,8 +30,7 @@ class DemonstrationRecorder:
         pass
 
     def save(self):
-        """
-        Write the data from the various sources with a common prefix
+        """Write the data from the various sources with a common prefix
         """
         save_prefix = f"{self.counter:05d}"
         # writing the robot data if the robot is available
@@ -52,18 +45,6 @@ class DemonstrationRecorder:
                 data["rc-pulse-target"] = self.robot_controller.pulse_controller.as_dict()
             self.demonstration.actions.append(data)
             self.demonstration.annotations.append({})
-            #data = {}
-            #data["rc-position-target"] = copy.copy(self.remote_control.pos_target.values)
-            #data["rc-angle-target"] = self.robot_controller.angle_controller.as_dict()
-            #data["rc-pulse-target"] = self.robot_controller.pulse_controller.as_dict()
-            #data["reward"] = 0.0 # placeholder for the reward
-            #data["annotation"] = "" # placeholder for annotation
-
-            #json_file = pathlib.Path(self.save_dir, f"{save_prefix}.json") 
-            #print(f"Saving into json file {json_file}")
-            #with open(json_file,"w") as f:
-            #    json.dump(data, f)
-
         # save the captured images
         if self.camera_controller is not None:
             for index in self.camera_controller.images:

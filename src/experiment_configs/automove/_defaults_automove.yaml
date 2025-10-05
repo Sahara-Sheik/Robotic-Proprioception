@@ -1,0 +1,4 @@
+# default values for behavior cloning
+automove_type: random_waypoint_6D
+# type: move_on_table
+# type: simulated_pickup
