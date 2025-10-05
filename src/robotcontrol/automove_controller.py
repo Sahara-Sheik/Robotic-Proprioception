@@ -121,7 +121,7 @@ class AutoMoveController(AbstractController):
                 self.stop()
                 break
             if self.interactive_confirm:
-                dist = self.pos_current.empirical_distance(self.pos_target, self.robot_controller.exp)
+                dist = self.pos_current.empirical_distance(self.robot_controller.exp, self.pos_target)
                 print(f"Proposed next target: {self.pos_target} which is at distance {dist} from current")
                 proceed = input("Proceed? ") in ["y", "Y", ""]
                 if not proceed:

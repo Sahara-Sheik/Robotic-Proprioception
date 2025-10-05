@@ -104,7 +104,9 @@ class PositionController:
         return copy(self.pos)
 
     def stop_robot(self):
+        print("***al5d_position_controller: Initiating the stopping of the robot")
         self.pulse_controller.stop_robot()
+        print("***al5d_position_controller: Robot stopped")
 
     @staticmethod
     def ik_shoulder_elbow_wrist(target:RobotPosition):

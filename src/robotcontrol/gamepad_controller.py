@@ -51,8 +51,9 @@ class GamepadController(AbstractController):
             print(e)
             print("Bye")
         finally:
-            print("Done")
+            print("*** Gamepack Controller: Exiting, stopping the robot.")
             self.robot_controller.stop_robot()
+            print("*** Gamepack Controller: Robot stopped, leaving GamepadController")
 
 
 
