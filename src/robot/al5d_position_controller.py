@@ -18,7 +18,8 @@ logging.basicConfig(level=logging.WARNING)
 
 class RobotPosition:
     """A data class describing the high level robot position. 
-    The functions returning things here are heavily dependent on an exp of the position_controller type, but this will need to be passed on every time, as this class needs to remain lightweight."""
+    The functions returning things here are heavily dependent on an exp of the position_controller type. 
+    """
 
     FIELDS = ["height", "distance", "heading", "wrist_angle", "wrist_rotation", "gripper"]
 
@@ -47,7 +48,7 @@ class RobotPosition:
         return retval
 
     def to_normalized_vector(self, exp: Experiment):
-        """Converts the positions to a normalized vector"""
+        """Converts the positions from dictionary to a normalized vector"""
         retval = np.zeros(6, dtype = np.float32)
         for i, fld in enumerate(RobotPosition.FIELDS):
             retval[i] = RobotHelper.map_ranges(self.values[fld], exp["POS_MIN"][fld], exp["POS_MAX"][fld])

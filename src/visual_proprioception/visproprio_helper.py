@@ -72,9 +72,10 @@ def load_demonstrations_as_proprioception_training(sp, exp: Experiment, spexp: E
         for i in range(demo.metadata["maxsteps"]):
             sensor_readings, _ = demo.get_image(i, camera=camera, transform=transform, device=device)
             z = sp.process(sensor_readings)
-            a = demo.get_action(i)
+            # a = demo.get_action(i)
+            rp = demo.get_action(i, "rc-position-target", exp_robot)
             #anorm = np.zeros(a.shape, np.float32)
-            rp = RobotPosition.from_vector(exp_robot, a)
+            # rp = RobotPosition.from_vector(exp_robot, a)
             anorm = rp.to_normalized_vector(exp_robot)
             inp = torch.from_numpy(z)
             tgt = torch.from_numpy(anorm)

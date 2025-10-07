@@ -15,6 +15,7 @@ import pprint
 import pathlib
 from sensorprocessing.sp_helper import load_picturefile_to_tensor, load_capture_to_tensor
 from torchvision import transforms
+from robot.al5d_position_controller import RobotPosition
 
 
 def list_demos(exp, prefix = None):
@@ -154,13 +155,13 @@ class Demonstration:
         """Sets the annotation, by default the reward"""
         self.annotations[i][type] = value
 
-    def get_action(self, i, type="rc-position-target"):
+    def get_action(self, i, type="rc-position-target", exp=None):
         """Returns the action at timestep i. The action is a dictionary, and the type is the key to the dictionary. The default is "rc_position_target", which is the position of the robot in the world frame. Other types are "rc_velocity_target" and "rc_orientation_target".
         """
-        actions = self.actions[i][type]
-        return list(actions.values())
-
-
+        if type == "rc-position-target":
+            values = self.actions[i][type]
+            return RobotPosition(exp, values)
+        return self.actions[i][type]
 
     def __str__(self):
         return pprint.pformat(self.__dict__)
