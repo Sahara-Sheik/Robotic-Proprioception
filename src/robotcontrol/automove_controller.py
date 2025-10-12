@@ -108,7 +108,9 @@ class AutoMoveController(AbstractController):
     def control(self):
         """The main control loop"""
         self.exit_control = False
+        self.autonomous_countdown = 0
         while True:
+            self.autonomous_countdown -= 1
             start_time = time.time() 
             # Ensures that we can stop it by pressing q on the image display
             key = self.camera_controller.update() 
@@ -120,13 +122,15 @@ class AutoMoveController(AbstractController):
             if self.next_pos() is None or self.max_timesteps <= 0:
                 self.stop()
                 break
-            if self.interactive_confirm:
+            if self.interactive_confirm and self.autonomous_countdown <= 0:
                 dist = self.pos_current.empirical_distance(self.robot_controller.exp, self.pos_target)
                 print(f"Proposed next target: {self.pos_target} which is at distance {dist} from current")
-                proceed = input("Proceed? ") in ["y", "Y", ""]
-                if not proceed:
+                proceed = input("Proceed? [stop/y/<number>]")
+                if proceed == "stop":
                     self.stop()
                     break
+                if proceed.isdigit():
+                    self.autonomous_countdown = int(proceed)
             self.control_robot()
             self.pos_current = self.pos_target
             self.update()
