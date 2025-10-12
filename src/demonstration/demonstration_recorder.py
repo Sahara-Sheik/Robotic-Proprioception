@@ -16,8 +16,6 @@ import copy
 
 class DemonstrationRecorder:
     """Record demonstration data collected from various controllers, sensors etc.
-    
-    FIXME: this will need to be changed to directly create a demonstration object
     """
 
     def __init__(self, demonstration, remote_control, robot_controller: PositionController, camera_controller: CameraController, save_dir = None):

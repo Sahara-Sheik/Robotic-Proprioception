@@ -3,3 +3,4 @@
 # active_camera_list: [0]
 active_camera_list: [0]
 saved_image_size: [256, 256]
+fps: 10

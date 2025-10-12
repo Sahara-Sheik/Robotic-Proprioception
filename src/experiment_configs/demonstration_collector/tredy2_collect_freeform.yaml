@@ -5,7 +5,7 @@ demonstration_name: "freeform"
 # this depends both on the particular machine as well as what components are being used 
 # at this moment. 
 
-primary_controller: "automove"
+primary_controller: "xbox"
 available_robot: True
 
 exp_position_controller: "robot_al5d"

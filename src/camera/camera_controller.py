@@ -1,7 +1,7 @@
-import numpy as np
-from pathlib import Path
+#import numpy as np
+#from pathlib import Path
 import cv2
-import time
+#import time
 
 class CameraController:
     """This class is used to connect to a specified set of cameras. Images are captured from the cameras whenever the update is called. At the same time, it can also save the images to a specific directory and a specific name.
@@ -14,7 +14,6 @@ class CameraController:
     # cameras = [0, 2]
     cameras = [4]    
     """
-#    def __init__(self, devices = [2, 3, 4], img_size = (128, 128)):
     def __init__(self, exp):
         """
         cameras: a list of numbers which correspond to the capture devices that will be captured
@@ -27,6 +26,11 @@ class CameraController:
         self.capture_devs = {}
         for i in exp["active_camera_list"]:
             cap = cv2.VideoCapture(i) 
+            ret, frame = cap.read()
+            cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.img_size[0])
+            cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.img_size[1])
+            cap.set(cv2.CAP_PROP_FPS, self.exp["fps"])
+
             if cap is None or not cap.isOpened():
                 print(f"Warning: unable to open video source: {i}")
             else:
