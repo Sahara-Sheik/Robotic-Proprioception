@@ -11,44 +11,94 @@ import shutil
 from exp_run_config import Config
 Config.PROJECTNAME = "BerryPicker"
 
+def group_sortout(prefix, frompos, topos, demo_names, retval, select):
+    """Utility function for sorting out a group"""
+    demo_prefix = demo_names[frompos:topos]
+    select[prefix] = []
+    for i, demo_name in enumerate(demo_prefix):
+        name = f"{prefix}_{i:05d}"
+        retval[name] = demo_name
+        select[prefix].append(name)
 
 def group_chooser_sp_bc_trivial(demo_names):
     """Copy all the data to sp, bc both training and testing. Note that this overlaps the training and testing so it is not a good idea in general."""
-    retval = {}
-    # the sensorprocessing data
-    for i, demo_name in enumerate(demo_names):
-        retval[f"sp_training_{i:05d}"] = demo_name
-    for i, demo_name in enumerate(demo_names):
-        retval[f"sp_validation_{i:05d}"] = demo_name
-    for i, demo_name in enumerate(demo_names):
-        retval[f"sp_testing_{i:05d}"] = demo_name
-    # the behavior cloninng data
-    for i, demo_name in enumerate(demo_names):
-        retval[f"bc_training_{i:05d}"] = demo_name
-    for i, demo_name in enumerate(demo_names):
-        retval[f"bc_validation_{i:05d}"] = demo_name
-    for i, demo_name in enumerate(demo_names):
-        retval[f"bc_testing_{i:05d}"] = demo_name
-    return retval
+    retval = {}; select = {}
+    sepend = len(demo_names)
+    group_sortout("sp_training", 0, sepend, demo_names, retval, select)
+    group_sortout("sp_validation", 0, sepend, demo_names, retval, select)
+    group_sortout("sp_testing", 0, sepend, demo_names, retval, select)
+    group_sortout("bc_training", 0, sepend, demo_names, retval, select)
+    group_sortout("bc_validation", 0, sepend, demo_names, retval, select)
+    group_sortout("bc_testing", 0, sepend, demo_names, retval, select)
+    return retval, select
+
+def group_chooser_sp_bc_standard(demo_names):
+    """Standard group chooser for the data for the behavior cloning flow
+    Groups will be as follows:
+       * sp training data: 40%
+       * sp validation data: 20%, from the bc training
+       * sp testing data: 20%, shared with bc testing
+       * bc training data: 40%
+       * bc validation data: 20%, from the sp training
+       * bc testing data: 20%, shared with sp testing
+    """
+    retval = {}; select = {}
+    # the separating numbers
+    sep1half = int(len(demo_names) * 0.2)
+    sep1 = int(len(demo_names) * 0.4)
+    sep2half = int(len(demo_names) * 0.6)
+    sep2 = int(len(demo_names) * 0.8)
+    sepend = len(demo_names)
+    group_sortout("sp_training", 0, sep1, demo_names, retval, select)
+    group_sortout("sp_validation", sep1, sep2half, demo_names, retval, select)
+    group_sortout("sp_testing", sep2, sepend, demo_names, retval, select)
+    group_sortout("bc_training", sep1, sep2, demo_names, retval, select)
+    group_sortout("bc_validation", 0, sep1half, demo_names, retval, select)
+    group_sortout("bc_testing", sep2, sepend, demo_names, retval, select)
+    return retval, select
 
 def group_chooser_sp_vp_trivial(demo_names):
     """Copy all the data to sp, bc both training and testing. Note that this overlaps the training and testing so it is not a good idea in general."""
-    retval = {}
-    # the sensorprocessing data
-    for i, demo_name in enumerate(demo_names):
-        retval[f"sp_training_{i:05d}"] = demo_name
-    for i, demo_name in enumerate(demo_names):
-        retval[f"sp_validation_{i:05d}"] = demo_name
-    for i, demo_name in enumerate(demo_names):
-        retval[f"sp_testing_{i:05d}"] = demo_name
-    # the behavior cloninng data
-    for i, demo_name in enumerate(demo_names):
-        retval[f"vp_training_{i:05d}"] = demo_name
-    for i, demo_name in enumerate(demo_names):
-        retval[f"vp_validation_{i:05d}"] = demo_name
-    for i, demo_name in enumerate(demo_names):
-        retval[f"vp_testing_{i:05d}"] = demo_name
-    return retval
+    retval = {}; select = {}
+    # the separating numbers
+    sep1half = int(len(demo_names) * 0.2)
+    sep1 = int(len(demo_names) * 0.4)
+    sep2half = int(len(demo_names) * 0.6)
+    sep2 = int(len(demo_names) * 0.8)
+    sepend = len(demo_names)
+    group_sortout("sp_training", 0, sep1, demo_names, retval, select)
+    group_sortout("sp_validation", sep1, sep2half, demo_names, retval, select)
+    group_sortout("sp_testing", sep2, sepend, demo_names, retval, select)
+    group_sortout("vp_training", sep1, sep2, demo_names, retval, select)
+    group_sortout("vp_validation", 0, sep1half, demo_names, retval, select)
+    group_sortout("vp_testing", sep2, sepend, demo_names, retval, select)
+    return retval, select
+
+def group_chooser_sp_vp_standard(demo_names):
+    """Standard group chooser for the data for visual proprioception. 
+    Groups will be as follows:
+       * sp training data: 40%
+       * sp validation data: 20%, from the vp training
+       * sp testing data: 20%, shared with vp testing
+       * vp training data: 40%
+       * vp validation data: 20%, from the sp training
+       * vp testing data: 20%, shared with sp testing
+    """
+    retval = {}; selection = {}
+    # the separating numbers
+    sep1half = int(len(demo_names) * 0.2)
+    sep1 = int(len(demo_names) * 0.4)
+    sep2half = int(len(demo_names) * 0.6)
+    sep2 = int(len(demo_names) * 0.8)
+    sepend = len(demo_names)
+    group_sortout("sp_training", 0, sep1, demo_names, retval, selection)
+    group_sortout("sp_validation", sep1, sep2half, demo_names, retval, selection)
+    group_sortout("sp_testing", sep2, sepend, demo_names, retval, selection)
+    group_sortout("vp_training", sep1, sep2, demo_names, retval, selection)
+    group_sortout("vp_validation", 0, sep1half, demo_names, retval, selection)
+    group_sortout("vp_testing", sep2, sepend, demo_names, retval, selection)
+    return retval, selection
+
 
 def import_demopack(demo_path, group_chooser):
     assert(demo_path.is_dir())
@@ -74,10 +124,10 @@ def import_demopack(demo_path, group_chooser):
     shutil.copy2(demonstration_yaml, target_yaml)
     shutil.copy2(demonstration_yaml, pathlib.Path(demo_exprun, demoname + ".yaml"))
     # copy the different demonstrations with different names
-    tocopy = group_chooser(demo_names)
+    tocopy, selection = group_chooser(demo_names)
     for target in tocopy:
         destdir = pathlib.Path(target_dir, target)
         sourcedir = pathlib.Path(demo_path, tocopy[target])
         shutil.copytree(sourcedir, destdir)
-
+    return selection
     
