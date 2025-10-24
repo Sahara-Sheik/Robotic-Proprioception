@@ -86,8 +86,8 @@ def create_trainingdata_bc(exp, exp_sp, exp_robot, device):
                 z = sp.process(sensor_readings)
                 inputs_list.append(torch.from_numpy(z))
                 # the action we are choosing, is the next one
-                a = demo.get_action(i+1)
-                rp = RobotPosition.from_vector(exp_robot, a)
+                rp = demo.get_action(i+1, "rc-position-target", exp_robot)
+                #rp = RobotPosition.from_vector(exp_robot, a)
                 anorm = rp.to_normalized_vector(exp_robot)        
                 targets_list.append(torch.from_numpy(anorm))
             inputs_tensor = torch.stack(inputs_list)

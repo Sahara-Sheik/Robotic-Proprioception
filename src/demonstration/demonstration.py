@@ -155,7 +155,7 @@ class Demonstration:
         """Sets the annotation, by default the reward"""
         self.annotations[i][type] = value
 
-    def get_action(self, i, type="rc-position-target", exp=None):
+    def get_action(self, i, type:str="rc-position-target", exp=None):
         """Returns the action at timestep i. The action is a dictionary, and the type is the key to the dictionary. The default is "rc_position_target", which is the position of the robot in the world frame. Other types are "rc_velocity_target" and "rc_orientation_target".
         """
         if type == "rc-position-target":

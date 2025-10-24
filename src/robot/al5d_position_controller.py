@@ -23,9 +23,10 @@ class RobotPosition:
 
     FIELDS = ["height", "distance", "heading", "wrist_angle", "wrist_rotation", "gripper"]
 
-    def __init__(self, exp, values = None):
+    def __init__(self, exp: Experiment, values:dict = None):
         # writing this list here to ensure that we have it in the right order
-        # this should be used for iteration, not the values
+        # this should be used for iteration, not the values\
+        assert exp["robot_name"]=="al5d" and exp["controller_type"]=="position_controller"
         if values is None:
             print(exp["POS_DEFAULT"])
             self.values = copy(exp["POS_DEFAULT"])

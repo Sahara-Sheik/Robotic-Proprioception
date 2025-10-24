@@ -1,5 +1,6 @@
-# configuration data for the position controller on the
-# robot connected for the computer "raven" which is in Lotzi Boloni's office
+# This is the type of exprun that should be passed into the ad5d_position_controller.RobotPosition and related fields
+robot_name: "al5d"
+controller_type: "position_controller"
 
 exp_pulsecontroller: "robot_al5d"
 run_pulsecontroller: "pulse_controller_00"
