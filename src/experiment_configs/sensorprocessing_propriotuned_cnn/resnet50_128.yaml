@@ -33,7 +33,7 @@ freeze_feature_extractor: True
 
 
 # # Sahara's Setup
-# # the training data in the demonstration / subrun / camera form
+# the training data in the demonstration / subrun / camera form
 # training_data:
 #   - ["freeform", "2025_03_08__14_15_53", "dev2"]
 #   - ["freeform", "2025_03_08__14_16_57", "dev2"]
@@ -44,16 +44,15 @@ freeze_feature_extractor: True
 
 # video based training data
 
-# the training data in the demonstration / subrun / camera form 
+# the training data in the demonstration / subrun / camera form
 training_data:
-  - ["random-both-cameras-video", "2025_03_08__14_15_53" , "dev2"]
+ - ["random-both-cameras-video", "2025_03_08__14_15_53" , "dev2"]
+ - ["random-both-cameras-video", "2025_03_08__14_16_57" , "dev2"]
+ - ["random-both-cameras-video", "2025_03_08__14_19_12" , "dev2"]
+ - ["random-both-cameras-video", "2025_03_08__14_21_28" , "dev2"]
 
-#  - ["random-both-cameras-video", "2025_03_08__14_16_57" , "dev2"]
-#  - ["random-both-cameras-video", "2025_03_08__14_19_12" , "dev2"]
-#  - ["random-both-cameras-video", "2025_03_08__14_21_28" , "dev2"]
 
-
-# the validation data in the demonstration / subrun form 
+# the validation data in the demonstration / subrun form
 validation_data:
   - ["random-both-cameras-video", "2025_03_08__14_23_19" , "dev2"]
   - ["random-both-cameras-video", "2025_03_08__14_24_52" , "dev2"]

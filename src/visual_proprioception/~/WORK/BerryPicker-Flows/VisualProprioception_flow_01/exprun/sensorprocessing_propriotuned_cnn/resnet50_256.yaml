@@ -1,0 +1,32 @@
+class: "ResNetProprioTunedSensorProcessing"
+# resnet-50 00 
+name : 'resnet-50-256'
+
+# image_size: [64, 64]
+image_size: [256, 256]
+
+latent_size: 256
+
+reductor_step_1: 512
+proprio_step_1: 64
+proprio_step_2: 16
+output_size: 6
+
+model: 'ResNetProprioTunedRegression'
+loss: 'MSELoss' # alternatively it could be L1Loss
+epochs: 100
+learning_rate: 0.002
+batch_size: 32
+# batch_size: 1
+
+freeze_feature_extractor: True
+
+# the training data in the demonstration / subrun / camera form 
+training_data:
+  - ["freeform", "2024_12_26__16_40_20", "dev2"]
+  - ["freeform", "2024_12_26__16_44_06", "dev2"]
+
+# the testing data in the demonstration / subrun / camera form
+testing_data:
+  - ["freeform", "2024_12_26__16_40_20", "dev2"]
+
