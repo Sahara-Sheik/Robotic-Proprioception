@@ -14,6 +14,8 @@ proprioception_training_task: 'proprioception-cluttered'
 proprioception_testing_task: 'proprioception-uncluttered'
 
 
+robot_exp: "robot_al5d"
+robot_run: "position_controller_00"
 
 
 # proprioception_training_task: 'proprioception-cluttered'
