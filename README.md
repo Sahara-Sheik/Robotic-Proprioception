@@ -1,7 +1,8 @@
-# BerryPicker
+# XXXX-2
+
 This software package contains code for vision driven robot manipulation using an inexpensive robotic arm.
 
-The type of skills we aim to develop include (but are not limited to) agricultural manipulations such as picking fruits and berries, checking the ripeness of fruits, or detecting plant diseases. 
+The type of skills we aim to develop include (but are not limited to) agricultural manipulations such as picking fruits and berries, checking the ripeness of fruits, or detecting plant diseases.
 
 ## Libraries needed
 * approxeng.input == 2.5
@@ -18,7 +19,7 @@ Notes:
 
 # Configuration files
 
-Developing and validating robotics requires extensive experimentation with various hardware and software components. The BerryPicker package uses a relatively intricate yaml based configuration system that allows moving the package from accross different systems, and run experiments. 
+Developing and validating robotics requires extensive experimentation with various hardware and software components. The BerryPicker package uses a relatively intricate yaml based configuration system that allows moving the package from accross different systems, and run experiments.
 
 ## Main configuration
 
@@ -31,10 +32,10 @@ Config.PROJECTNAME = "BerryPicker"
 Config()["robot"]["usb_port"]
 ```
 
-The configuration is loaded as follows. Config first reads the file HOMEDIR/.config/BerryPicker/mainsettings.yaml. This file contains one field, the location of the main config file 
+The configuration is loaded as follows. Config first reads the file HOMEDIR/.config/BerryPicker/mainsettings.yaml. This file contains one field, the location of the main config file
 
 ```
-# Change the path here to run different configurations on different machines. 
+# Change the path here to run different configurations on different machines.
 configpath: "/path/to/the/setting.yaml"
 ```
 
