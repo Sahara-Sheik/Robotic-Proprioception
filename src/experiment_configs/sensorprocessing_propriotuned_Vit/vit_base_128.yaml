@@ -14,7 +14,8 @@ projection_hidden_dim: 512  # For vit_b_16, recommended values: 384-512
                            # For vit_l_16, recommended values: 512-768
                            # For vit_h_14, recommended values: 768-1024
 latent_size: 128       # Size of the latent embedding to generate
-image_size: 224        # Required input size for the ViT model
+# image_size: 224        # Required input size for the ViT model
+image_size: [224, 224]
 loss: "MSE"
 # Training parameters
 batch_size: 32
@@ -56,3 +57,4 @@ training_data:
 validation_data:
   - ["random-both-cameras-video", "2025_03_08__14_23_19" , "dev2"]
   - ["random-both-cameras-video", "2025_03_08__14_24_52" , "dev2"]
+

@@ -24,7 +24,7 @@ def get_transform_to_sp(exp):
     return transform
 
 def load_image_to_batch(image, transform, device):
-    """Takes a PIL image and transforms it into a tensor representing a single element batch, moved to the appropriate device. 
+    """Takes a PIL image and transforms it into a tensor representing a single element batch, moved to the appropriate device.
     This format should be approprate for feeding into the sensor processing model."""
     image_rgb = image.convert("RGB")
     image_tensor = transform(image_rgb)

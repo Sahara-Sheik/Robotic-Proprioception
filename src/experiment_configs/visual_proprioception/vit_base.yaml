@@ -15,13 +15,14 @@ projection_hidden_dim: 512  # For vit_b_16, recommended values: 384-512
 
 
 latent_size: 128       # Size of the latent embedding to generate
-image_size: 224        # Required input size for the ViT model
+# image_size: 224        # Required input size for the ViT model
+# image_size: [224, 224]
 loss: "MSE"
 # Training parameters
 batch_size: 32
 learning_rate: 0.0001
 freeze_feature_extractor: true  # Whether to freeze the ViT backbone during training
-epochs: 1000
+epochs: 3
 batch_size: 8
 proprio_step_1: 64         # For final MLP
 proprio_step_2: 64

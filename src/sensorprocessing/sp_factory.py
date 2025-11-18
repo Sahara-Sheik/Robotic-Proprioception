@@ -15,7 +15,7 @@ def create_sp(spexp, device):
     if spexp["class"] == "ConvVaeSensorProcessing_concat_multiview":
         return sp_conv_vae_concat_multiview.ConcatConvVaeSensorProcessing(spexp, device)
     if spexp["class"] == "ConvVaeSensorProcessing_multiview":
-        return sp_conv_vae_multiview.ConvVaeSensorProcessing_multiview(spexp, device)
+        return sp_conv_vae_concat_multiview.ConvVaeSensorProcessing_multiview(spexp, device)
     if spexp['class']=="VGG19ProprioTunedSensorProcessing":
         return sp_propriotuned_cnn.VGG19ProprioTunedSensorProcessing(spexp, device)
     if spexp['class']=="ResNetProprioTunedSensorProcessing":

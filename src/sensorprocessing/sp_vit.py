@@ -107,7 +107,9 @@ class ViTEncoder(nn.Module):
         )
 
         # Create a resize transform to the required vit input size
-        input_size = (exp["image_size"], exp["image_size"])
+        # input_size = (exp["image_size"], exp["image_size"])
+        input_size = (exp["image_size"])
+
         self.resize = transforms.Resize(input_size, antialias=True)
 
         # Freeze the feature extractor if specified
@@ -203,7 +205,9 @@ class VitSensorProcessing(AbstractSensorProcessing):
         print(f"Initializing ViT Sensor Processing:")
         print(f"  Model: {exp['vit_model']}")
         print(f"  Latent dimension: {exp['latent_size']}")
-        print(f"  Image size: {exp['image_size']}x{exp['image_size']}")
+        # print(f"  Image size: {exp['image_size'][0]}x{exp['image_size'][1]}")
+        print(f"  Image size: {exp['image_size']}")
+
 
         # Create the ViT encoder model
         self.enc = ViTEncoder(exp, device)

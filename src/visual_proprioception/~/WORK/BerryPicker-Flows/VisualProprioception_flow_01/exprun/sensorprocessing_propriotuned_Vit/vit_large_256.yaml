@@ -44,3 +44,15 @@ use_6d_token: false
 # Note: This configuration is required for the sp_vit.py module.
 # All values (including 128 for latent_size and 224 for image_size)
 # are specified here and not hardcoded in the implementation.
+
+
+training_data:
+ - ["random-both-cameras-video", "2025_03_08__14_15_53" , "dev2"]
+ - ["random-both-cameras-video", "2025_03_08__14_16_57" , "dev2"]
+ - ["random-both-cameras-video", "2025_03_08__14_19_12" , "dev2"]
+ - ["random-both-cameras-video", "2025_03_08__14_21_28" , "dev2"]
+
+# the validation data in the demonstration / subrun form
+validation_data:
+  - ["random-both-cameras-video", "2025_03_08__14_23_19" , "dev2"]
+  - ["random-both-cameras-video", "2025_03_08__14_24_52" , "dev2"]
