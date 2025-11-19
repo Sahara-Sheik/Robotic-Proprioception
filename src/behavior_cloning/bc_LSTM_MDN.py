@@ -3,8 +3,6 @@ bc_LSTM_MDN.py
 
 This model implements the configuration for the paper
 
-R. Rahmatizadeh, P. Abolghasemi, L. Bölöni, and S. Levine. Vision-Based Multi-Task Manipulation for Inexpensive Robots Using End-To-End Learning from Demonstration. In Proc. of International Conference on Robotics and Automation (ICRA-2018), May 2018
-
 It combines LSTM with skip connections and an MDN-based output.
 
 """
@@ -55,9 +53,9 @@ class bc_LSTM_MDN(nn.Module):
         out = out_3[:, -1, :]
         mu, sigma, pi = self.mdn(out)
         return mu, sigma, pi  # Predicted next vector
-    
+
     def forward_and_sample(self, x):
-        """Forwards through the model, and then performs a sample from the output, returning a single value. 
+        """Forwards through the model, and then performs a sample from the output, returning a single value.
         The random seed is the torch, one can set it with torch.manual_seed
         """
         mu, sigma, pi = self.forward(x)
